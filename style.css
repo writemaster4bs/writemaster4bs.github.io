@@ -56,26 +56,6 @@ body {
   background-attachment: fixed;
   overflow: hidden;
 }
-#results {
-  height: inherit;
-  width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.results-inner {
-  overflow-x: hidden;
-  overflow-y: auto;
-  width: 95%;
-}
-#results-outer > * > .results-inner {
-  border-radius: 10px !important;
-  height: 95%;
-  border: none;
-}
-.tabs {
-  overflow-y: hidden;
-  overflow-x: auto;
-}
 code {
   white-space: wrap;
 }
@@ -110,15 +90,7 @@ html,
   padding: 10px;
   background-color: #ffffff !important;
 }
-.main {
-  display: grid;
-  width: 100vw;
-  grid-template-rows: 10% 80% 10%;
-}
-.main > *,
-.userface > *,
-.selbox > *,
-.mainbox > * {
+* {
   max-width: 100vw;
   box-sizing: border-box; /* Ensures padding doesn't break the width */
   overflow-wrap: break-word; /* Wraps long content */
@@ -146,113 +118,6 @@ textarea {
 textarea.big {
   height: 10em;
 }
-.divider1 {
-  display: grid;
-  grid-template:
-    "a c" 50%
-    "a d" 50%
-    /80% 20%;
-  gap: 5px;
-  height: inherit;
-  width: inherit;
-}
-#question {
-  height: inherit;
-  overflow: scroll;
-  background-color: #ffffff;
-  margin: 0;
-  padding: 0;
-  cursor: text;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-}
-#tcontain {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-#tcontain > h3 {
-  padding: 0;
-  margin: 0 !important;
-}
-
-#question > p,
-#question > p > strong,
-#question > table > thead > tr > th,
-#question > table > tbody > tr > td {
-  text-align: left;
-  font-family: var(--second-font);
-  font-size: 22px;
-}
-.qcontain {
-  height: 100%;
-}
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  gap: 10px;
-}
-
-@media screen and (max-aspect-ratio: 1) {
-  .wide-only {
-    display: none !important;
-  }
-  .grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 10px;
-  }
-  .grid3 {
-    grid-template-columns: 1fr !important;
-    grid-template-rows: 1fr 1fr 1fr;
-    gap: 10px;
-  }
-  .header {
-    grid-template: "a . c" 100%/15% 30% 55% !important;
-  }
-  .divider1 {
-    grid-template:
-      "a a" 40%
-      "a a" 40%
-      "c d" 20%
-      /50% 50% !important;
-  }
-}
-h1#timer {
-  font-size: 2em;
-}
-.wide-only {
-  display: block;
-}
-html {
-  width: 100vw;
-}
-#results,
-#toeic1,
-#toeic2,
-#toeic3,
-#toeic4,
-#toeic5,
-#toeic6,
-#toeic7,
-#toeic8 {
-  text-align: justify;
-  -ms-text-justify: auto;
-  text-justify: auto;
-}
-.toeic > p {
-  margin: 0px;
-  padding: 0px;
-}
-.results-inner {
-  border: 1px solid black;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  padding: 10px;
-}
 .selector {
   background-color: #0090ff;
   color: whitesmoke;
@@ -266,9 +131,6 @@ html {
 .selector:hover {
   background-color: #006dc1;
   transform: scale(1.025);
-}
-#back {
-  margin-left: 8px !important;
 }
 table {
   width: 100%;
@@ -393,16 +255,6 @@ tr:nth-child(even) {
   z-index: index -999;
   transform: translateY(10px);
 }
-#exam > * {
-  font-family: var(--second-font);
-  text-align: justify;
-  min-width: 60vw;
-}
-#exam {
-  border: 1px solid black;
-  border-radius: 10px;
-  overflow-x: hidden;
-}
 .tab:hover {
   background-color: #80c8ff;
   border: 1px solid rgba(0, 0, 0, 0); /*to avoid jittering issues on other tabs*/
@@ -411,13 +263,6 @@ tr:nth-child(even) {
 }
 img {
   transform: scale(0.9);
-}
-.tab.selected {
-  background-color: #0090ff;
-  border: 1px solid rgba(0, 0, 0, 0); /*to avoid jittering issues on other tabs*/
-  color: white;
-  font-weight: bolder;
-  transform: none;
 }
 .grid3 {
   height: inherit;
@@ -438,38 +283,21 @@ header {
     transform: rotate(360deg);
   }
 }
-.grid-cell-a {
-  padding: 5px;
-  grid-area: a;
-  overflow-y: scroll;
-}
-/*
-.grid-cell-b {
-  grid-area: b;
-  border:1px solid black;
-  padding:5px;
-  margin:5px;
-  border-radius: 10px;
-}
-  */
-.grid-cell-c {
-  grid-area: c;
-}
-.grid-cell-d {
-  grid-area: d;
-  font-size: 2em;
-}
-.grid-cell-c,
-.grid-cell-d {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.grid-cell-d {
-  padding: 10px;
-}
-#submit-btn {
-  display: flex;
-  align-items: center;
-  
+@media screen and (max-aspect-ratio: 1) {
+  .wide-only {
+    display: none !important;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+  }
+  .grid3 {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  .header {
+    grid-template: "a . c" 100%/15% 30% 55% !important;
+  }
 }
