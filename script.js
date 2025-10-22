@@ -7,9 +7,9 @@
     { day: 10, month: 10, year: 2025, count: 30 },
     { day: 20, month: 10, year: 2025, count: 37 },
   ];
-  Chart.defaults.elements.line.tension=0.3;
-  Chart.defaults.backgroundColor = '#0090ff';
-Chart.defaults.borderColor = '#0090ff';
+  Chart.defaults.elements.line.tension = 0.3;
+  Chart.defaults.backgroundColor = "#0090ff";
+  Chart.defaults.borderColor = "#0090ff";
   new Chart(document.getElementById("perfchart"), {
     type: "line",
     data: {
@@ -41,3 +41,42 @@ Chart.defaults.borderColor = '#0090ff';
     },
   });
 })();
+var UI = document.getElementById("user_interface");
+
+function Scrollto(where) {
+  let topOffset = where.offsetTop;
+  UI.scrollTo({
+    top: topOffset,
+    behavior: "smooth",
+  });
+}
+function Attach(what, next) {
+  console.log(`Looking for ${what}_menu_selector`);
+  var btn = document.getElementById(`${what}_menu_selector`);
+  var where = document.getElementById(`${what}_menu_spos`);
+  var next_elem = document.getElementById(`${next}_menu_spos`);
+  btn.addEventListener("click", () => {
+    const topOffset = where.offsetTop;
+    UI.scrollTo({ top: topOffset, behavior: "smooth" });
+  });
+  const curry = where.offsetTop;
+  const nexty = next_elem ? next_elem.offsetTop : Infinity;
+  UI.addEventListener("scroll", () => {
+    var conty = UI.scrollTop+ UI.clientHeight / 2;
+    if (conty >= curry && conty <= nexty) {
+      btn.className = "option selected";
+    } else {
+      btn.className = "option";
+    }
+  });
+}
+Attach("main", "pref");
+Attach("pref", "stat");
+Attach("stat", "end");
+/*UI.addEventListener('scroll', () => {
+  const containerRect = container.getBoundingClientRect();
+  [main,pref,stat].forEach(
+
+  )
+  
+});*/

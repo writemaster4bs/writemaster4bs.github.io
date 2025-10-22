@@ -49,25 +49,88 @@
         <div class="big box left_bar">
           <img src="Picture\Logo.png" alt="Logo" />
           <div class="seperator"></div>
-          <div class="option selected">
+          <div class="option" id="main_menu_selector">
             <span class="material-symbols-outlined"> home </span>
           </div>
           <div class="seperator"></div>
-          <div class="option">
+          <div class="option" id="pref_menu_selector">
             <span class="material-symbols-outlined"> settings </span>
           </div>
           <div class="seperator"></div>
-          <div class="option">
+          <div class="option" id="stat_menu_selector">
             <span class="material-symbols-outlined"> chart_data </span>
           </div>
         </div>
-        <div class="big box user_interface" style="overflow-y: scroll">
+        <div
+          class="big box user_interface"
+          id="user_interface"
+          style="overflow-y: scroll"
+        >
+          <div class="seperator" id="main_menu_spos"></div>
           <h1>Dashboard</h1>
           <div class="seperator"></div>
           <h3>Your performance</h3>
           <div style="width: 100%; aspect-ratio: 2/1">
             <canvas id="perfchart"></canvas>
           </div>
+          <div class="seperator" id="pref_menu_spos"></div>
+          <h3>Prefrences</h3>
+          <div class="option2">
+            <div class="label">Option A</div>
+            <div class="switch_container">
+              <div class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </div>
+            </div>
+          </div>
+          <div class="option2">
+            <div class="label">Option B</div>
+            <div class="switch_container">
+              <div class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </div>
+            </div>
+          </div>
+          <div class="option2">
+            <div class="label">Option C</div>
+            <div class="switch_container">
+              <div class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </div>
+            </div>
+          </div>
+          <h1 style="font-size: xx-large">
+            Some more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />Some
+            more filler text because I don't know what to put here<br />
+          </h1>
+          <div class="seperator" id="stat_menu_spos"></div>
+          <h3>Statistics</h3>
+          <h1 style="font-size: xx-large">
+            Even more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />Even
+            more filler text because I don't know what to put here<br />
+          </h1>
+          <div class="seperator" id="end_menu_spos"></div>
         </div>
         <div class="big box generate_test">
           <h3>Generate Exam</h3>
