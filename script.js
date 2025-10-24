@@ -73,6 +73,18 @@ function Attach(what, next) {
 Attach("main", "pref");
 Attach("pref", "stat");
 Attach("stat", "end");
+let IELTS_Score=document.getElementById("ielts_score")
+let IELTS_Slider=document.getElementById("band_ielts")
+let TOEIC_Score=document.getElementById("toeic_score")
+let TOEIC_Slider=document.getElementById("band_toeic")
+TOEIC_Score.innerHTML=`${Math.round(TOEIC_Slider.value/10)*10} points`
+IELTS_Score.innerHTML=`Band ${IELTS_Slider.value/2}`
+TOEIC_Slider.addEventListener("input",()=>{
+  TOEIC_Score.innerHTML=`${Math.round(TOEIC_Slider.value/10)*10} points`
+})
+IELTS_Slider.addEventListener("input",()=>{
+  IELTS_Score.innerHTML=`Band ${IELTS_Slider.value/2}`
+})
 /*UI.addEventListener('scroll', () => {
   const containerRect = container.getBoundingClientRect();
   [main,pref,stat].forEach(
