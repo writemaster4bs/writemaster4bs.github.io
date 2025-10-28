@@ -1,18 +1,17 @@
-let the_chart=null;
+let the_chart = null;
 let data = [
-    { day: 6, month: 8, year: 2025, count: 10 },
-    { day: 27, month: 8, year: 2025, count: 19 },
-    { day: 8, month: 9, year: 2025, count: 25 },
-    { day: 29, month: 9, year: 2025, count: 20 },
-    { day: 10, month: 10, year: 2025, count: 30 },
-    { day: 20, month: 10, year: 2025, count: 37 },
-  ];
+  { day: 6, month: 8, year: 2025, count: 10 },
+  { day: 27, month: 8, year: 2025, count: 19 },
+  { day: 8, month: 9, year: 2025, count: 25 },
+  { day: 29, month: 9, year: 2025, count: 20 },
+  { day: 10, month: 10, year: 2025, count: 30 },
+  { day: 20, month: 10, year: 2025, count: 37 },
+];
 (async function () {
-  
   Chart.defaults.elements.line.tension = 0.25;
   Chart.defaults.backgroundColor = "#0090ff";
   Chart.defaults.borderColor = "#0090ff";
-  the_chart=new Chart(document.getElementById("perfchart"), {
+  the_chart = new Chart(document.getElementById("perfchart"), {
     type: "line",
     data: {
       labels: data.map((row) => `${row.day}/${row.month}/${row.year % 100}`),
@@ -32,8 +31,8 @@ function updateChartData(newData) {
   the_chart.data.datasets[0].data = newData.map((row) => row.count);
   the_chart.update();
 }
-function AddNewData(what){
-  data=data.concat(what);
+function AddNewData(what) {
+  data = data.concat(what);
   updateChartData(data);
 }
 var UI = document.getElementById("user_interface");

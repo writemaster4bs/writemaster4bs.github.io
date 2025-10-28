@@ -61,7 +61,7 @@ code {
 }
 .main {
   height: 100vh;
-  width:100vw;
+  width: 100vw;
 }
 .userface {
   display: flex;
@@ -70,10 +70,9 @@ code {
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding:20px;
+  padding: 20px;
 }
 .userface {
-  
   flex-grow: 1;
 }
 .box,
@@ -249,7 +248,7 @@ header {
     display: block !important;
     opacity: 100%;
   }
-  .option.narrow_only{
+  .option.narrow_only {
     display: flex !important;
   }
   .grid {
