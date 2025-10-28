@@ -1,5 +1,5 @@
-(async function () {
-  const data = [
+let the_chart=null;
+let data = [
     { day: 6, month: 8, year: 2025, count: 10 },
     { day: 27, month: 8, year: 2025, count: 19 },
     { day: 8, month: 9, year: 2025, count: 25 },
@@ -7,31 +7,15 @@
     { day: 10, month: 10, year: 2025, count: 30 },
     { day: 20, month: 10, year: 2025, count: 37 },
   ];
-  Chart.defaults.elements.line.tension = 0.3;
+(async function () {
+  
+  Chart.defaults.elements.line.tension = 0.25;
   Chart.defaults.backgroundColor = "#0090ff";
   Chart.defaults.borderColor = "#0090ff";
-  new Chart(document.getElementById("perfchart"), {
+  the_chart=new Chart(document.getElementById("perfchart"), {
     type: "line",
     data: {
-      labels: data.map(
-        (row) =>
-          `${row.day} ${
-            [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dec",
-            ][row.month - 1]
-          } ${row.year % 100}`
-      ),
+      labels: data.map((row) => `${row.day}/${row.month}/${row.year % 100}`),
       datasets: [
         {
           label: "Avg. Score",
@@ -41,6 +25,17 @@
     },
   });
 })();
+function updateChartData(newData) {
+  the_chart.data.labels = newData.map(
+    (row) => `${row.day}/${row.month}/${row.year % 100}`
+  );
+  the_chart.data.datasets[0].data = newData.map((row) => row.count);
+  the_chart.update();
+}
+function AddNewData(what){
+  data=data.concat(what);
+  updateChartData(data);
+}
 var UI = document.getElementById("user_interface");
 
 function Scrollto(where) {
@@ -69,7 +64,6 @@ function Attach(what, next) {
       btn.className = "option";
     }
   });
-  
 }
 Attach("main", "pref");
 Attach("pref", "stat");
@@ -78,13 +72,13 @@ let IELTS_Score = document.getElementById("ielts_score");
 let IELTS_Slider = document.getElementById("band_ielts");
 let TOEIC_Score = document.getElementById("toeic_score");
 let TOEIC_Slider = document.getElementById("band_toeic");
-TOEIC_Score.innerHTML = `${Math.round(TOEIC_Slider.value / 10) * 10} points`;
-IELTS_Score.innerHTML = `Band ${IELTS_Slider.value / 2}`;
+TOEIC_Score.innerHTML = `${TOEIC_Slider.value} points`;
+IELTS_Score.innerHTML = `Band ${IELTS_Slider.value}`;
 TOEIC_Slider.addEventListener("input", () => {
-  TOEIC_Score.innerHTML = `${Math.round(TOEIC_Slider.value / 10) * 10} points`;
+  TOEIC_Score.innerHTML = `${TOEIC_Slider.value} points`;
 });
 IELTS_Slider.addEventListener("input", () => {
-  IELTS_Score.innerHTML = `Band ${IELTS_Slider.value / 2}`;
+  IELTS_Score.innerHTML = `Band ${IELTS_Slider.value}`;
 });
 let GenerateTest = document.getElementById("generate_test");
 let Errors = document.getElementById("errors");
@@ -117,8 +111,8 @@ GenerateTest.addEventListener("click", () => {
   console.log(
     `Desired Target: ${
       TypeOfTest == "ielts"
-        ? `Band ${IELTS_Slider.value / 2}`
-        : `${Math.round(TOEIC_Slider.value / 10) * 10} points`
+        ? `Band ${IELTS_Slider.value}`
+        : `${TOEIC_Slider.value} points`
     }`
   );
 });
