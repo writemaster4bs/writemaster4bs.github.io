@@ -126,6 +126,9 @@ textarea.big {
   margin: 5px;
   padding: 3px;
   border-radius: 6px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
   border: none;
   /*font-size: larger;*/
   cursor: pointer;
@@ -343,7 +346,9 @@ select {
 
 .try_our_gpt {
   grid-area: try_our_gpt;
-  overflow-y: scroll;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }
 .test_format {
   position: relative;
