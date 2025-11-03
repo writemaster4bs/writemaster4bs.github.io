@@ -77,7 +77,7 @@
           <div class="seperator" id="pref_menu_spos"></div>
           <h3>Prefrences</h3>
           <div class="option2">
-            <div class="label">Set targets</div>
+            <div class="label">Enable personalization</div>
             <div class="switch_container">
               <div class="switch">
                 <input type="checkbox" id="set_targets" checked />
@@ -108,30 +108,35 @@
             style="font-weight: bolder; color: red"
           ></span
           ><br />
-          Your desired band target (for IELTS):
-          <span id="ielts_score" style="font-weight: bolder"></span><br />
-          <input
-            type="range"
-            name="band_ielts"
-            id="band_ielts"
-            class="slider_range"
-            min="0"
-            max="9"
-            step="0.5"
-            value="6"
-          />
-          Your desired score (for TOEIC):
-          <span id="toeic_score" style="font-weight: bolder"></span><br />
-          <input
-            type="range"
-            name="band_toeic"
-            id="band_toeic"
-            class="slider_range"
-            min="0"
-            max="990"
-            value="700"
-            step="10"
-          />
+          <div id="personalization">
+            Your current band (for IELTS):
+            <span id="ielts_score" style="font-weight: bolder"></span><br />
+            <input
+              type="range"
+              name="band_ielts"
+              id="band_ielts"
+              class="slider_range"
+              min="3"
+              max="9"
+              step="0.5"
+              value="6"
+            />
+            Your current score (for TOEIC):
+            <span id="toeic_score" style="font-weight: bolder"></span><br />
+            <input
+              type="range"
+              name="band_toeic"
+              id="band_toeic"
+              class="slider_range"
+              min="10"
+              max="990"
+              value="700"
+              step="10"
+            />
+          </div>
+          <button class="selector" id="deleteall">
+            Delete all personal data
+          </button>
           <div class="seperator" id="stat_menu_spos"></div>
           <h3>Statistics</h3>
           <span class="loader"></span>Please wait while I make this section of
@@ -180,19 +185,12 @@
           </div>
           <span id="errors" style="color: red; font-weight: bolder"></span
           ><br />
-          <button
-            class="selector"
-            id="generate_test"
-            style="font-size: larger; font-weight: bolder; padding: 10px"
-          >
+          <button class="selector" id="generate_test" style="padding: 10px">
             <span class="material-symbols-outlined"> assignment </span>Generate
           </button>
         </div>
         <div class="big box try_our_gpt">
-          <button
-            class="selector"
-            style="width: 80%; height: 80%; font-weight: bolder"
-          >
+          <button class="selector" style="width: 80%; height: 80%">
             <span class="material-symbols-outlined"> support_agent </span> AI
             Support
           </button>

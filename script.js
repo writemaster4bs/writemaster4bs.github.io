@@ -114,7 +114,7 @@ GenerateTest.addEventListener("click", () => {
   console.log(`Include Writing: ${HasWriting ? "YES" : "NO"}`);
   if (WhetherTargetsMatter) {
     console.log(
-      `Desired Target: ${
+      `Current performance: ${
         TypeOfTest == "ielts"
           ? `Band ${IELTS_Slider.value}`
           : `${TOEIC_Slider.value} points`
@@ -134,7 +134,7 @@ function UpdateWTM() {
     localStorage.setItem("targets", "yes");
   } else {
     SliderMessage.innerHTML =
-      "You must enable Set Targets for these sliders to apply.";
+      "You must enable personalization for these sliders to apply.";
     localStorage.setItem("targets", "no");
   }
 }
@@ -155,6 +155,34 @@ function UpdateDarkMode() {
 
 UpdateDarkMode();
 DarkModeSelector.addEventListener("change", UpdateDarkMode);
+const c = "01234567890123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+const randc = () => {
+  return c[Math.floor(Math.random() * c.length)] ?? c[0];
+};
+document.getElementById("deleteall").addEventListener("click", () => {
+  if (confirm("Are you sure? This cannot be undone")) {
+    let code = "";
+    for (let j = 0; j < 5; j++) {
+      for (let i = 0; i < 5; i++) {
+        code += randc();
+      }
+      if (j == 4) {
+        continue;
+      }
+      code += "-";
+    }
+    if (prompt(`Please type the following code to confirm: ${code}`) == code) {
+      localStorage.clear();
+      DarkModeSelector.checked = false;
+      SetTargets.checked = false;
+      IELTS_Slider.value = 5.5;
+      TOEIC_Slider.value = 700;
+      UpdateDarkMode();
+      UpdateWTM();
+      UpdateSliders();
+    }
+  }
+});
 /*UI.addEventListener('scroll', () => {
   const containerRect = container.getBoundingClientRect();
   [main,pref,stat].forEach(
