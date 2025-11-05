@@ -259,6 +259,13 @@ header {
   height: fit-content;
   gap: 10px;
 }
+.option3 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  margin: 10px;
+  height: fit-content;
+  gap: 10px;
+}
 @media screen and (max-aspect-ratio: 1) {
   .wide_only {
     display: none !important;
@@ -462,7 +469,48 @@ input#toeic {
   border: 1px solid var(--foreground-color);
   width: fit-content;
 }
+.dm_inner {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--foreground-color);
+  width: fit-content;
+}
+.theme {
+  position: relative;
+  cursor: pointer;
+}
+.theme input {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+input#default,
+input#dark,
+input#light {
+  cursor: pointer;
+}
+.theme input#default:checked + .dm_inner#dm_default_inner {
+  background-color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  color: white;
+}
+.theme input#dark:checked + .dm_inner#dm_dark_inner {
+  background-color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  color: white;
+}
+.theme input#light:checked + .dm_inner#dm_light_inner {
+  background-color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  color: white;
+}
 
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /*This section was copied from W3 schools and then modified.*/
 /* The switch - the box around the slider */
 .switch {
