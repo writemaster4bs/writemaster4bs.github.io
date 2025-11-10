@@ -131,7 +131,7 @@ GenerateTest.addEventListener("click", () => {
       sessionStorage.setItem("target", TOEIC_Slider.value);
     }
   }
-  window.location.href = "/Test_Page";
+  window.location.href = "/test";
 });
 let SetTargets = document.getElementById("set_targets");
 let SliderMessage = document.getElementById("whether_targets_matter");
