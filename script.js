@@ -113,10 +113,6 @@ GenerateTest.addEventListener("click", () => {
   console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
   console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
   console.log(`Include Writing: ${HasWriting ? "YES" : "NO"}`);
-  sessionStorage.setItem("type", TypeOfTest.toUpperCase());
-  sessionStorage.setItem("listening", HasListening);
-  sessionStorage.setItem("reading", HasReading);
-  sessionStorage.setItem("writing", HasWriting);
   if (WhetherTargetsMatter) {
     console.log(
       `Current performance: ${
@@ -125,14 +121,21 @@ GenerateTest.addEventListener("click", () => {
           : `${TOEIC_Slider.value} points`
       }`
     );
-    if (TypeOfTest == "ielts") {
-      sessionStorage.setItem("target", IELTS_Slider.value);
-    } else {
-      sessionStorage.setItem("target", TOEIC_Slider.value);
-    }
+    
+    sessionStorage.setItem("target", (TypeOfTest == 'ielts') ? IELTS_Slider.value : TOEIC_Slider.value);
   }
-  window.location.href = "/Test_Page";
+
+  const params = new URLSearchParams();
+  params.set('type', TypeOfTest);
+  // right side of && evaluates (run) if left is true, otherwise it stops immediately
+  // basically a 'shorthand if' if you will
+  HasListening && params.append('include', 'listening');
+  HasReading && params.append('include', 'reading');
+  HasWriting && params.append('include', 'writing');
+
+  window.location.href = "/test/index.html?" + params.toString();
 });
+
 let SetTargets = document.getElementById("set_targets");
 let SliderMessage = document.getElementById("whether_targets_matter");
 SetTargets.checked = localStorage.getItem("targets") == "yes";

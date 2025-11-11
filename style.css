@@ -122,7 +122,7 @@ textarea.big {
   height: 10em;
 }
 .selector {
-  background-color: var(--accent-color);
+  background-color: var(--accent-color) !important;
   color: whitesmoke;
   margin: 5px;
   padding: 3px;
@@ -136,7 +136,7 @@ textarea.big {
   cursor: pointer;
 }
 .selector:hover {
-  background-color: var(--accent-color-button-pressed);
+  background-color: var(--accent-color-button-pressed) !important;
 }
 table {
   width: 100%;
