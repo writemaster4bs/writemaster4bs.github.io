@@ -12,14 +12,11 @@ if (selected == "dark") {
   }
 }
 
-document.title = `${sessionStorage.getItem('type')} practice - Writemaster`
-document.getElementById("data").innerHTML = /*html*/ `
-Type of test: ${sessionStorage.getItem("type")}<br>
-Include listening: ${sessionStorage.getItem("listening")}<br>
-Include writing: ${sessionStorage.getItem("writing")}<br>
-Include reading: ${sessionStorage.getItem("reading")}<br>
-Target: ${sessionStorage.getItem("target") ?? "none"}<br>
-`;
+
+const params = new URLSearchParams(window.location.search);
+const testType = params.get('type');
+const testIncludes = params.getAll('include');
+document.title = `${testType.toUpperCase()} practice - Writemaster`;
 
 let timeLeft = 0; // seconds
 let intervalId = 0; // what
@@ -51,7 +48,7 @@ function UpdateTimer() { // please make variable names more self explanatory :(
 }
 
 async function getAIResponse(prompt = "") {
-	const apiKey = "AIzaSyACUiew2xvOhoLEQXiUtcqld7xl0BG4YwY";
+	const apiKey = "AIzaSyB3VuMDIBnlOkJL2KI3phT8iPHmfjD14KM";
 	const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
   
 	const requestBody = {
@@ -75,6 +72,6 @@ async function getAIResponse(prompt = "") {
 	return data.candidates[0].content.parts[0].text;
   }
 
-  getAIResponse(`I'm practicing for ${sessionStorage.getItem('type')}, can you generate a writing question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you don't need to provide pictures or anything. Thanks.`).then(response => {
-	console.log(response);
-  })
+// getAIResponse(`I'm practicing for ${sessionStorage.getItem('type')}, can you generate a writing question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you don't need to provide pictures or anything. Thanks.`).then(response => {
+//   console.log(response);
+// })
