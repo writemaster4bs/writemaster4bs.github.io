@@ -67,7 +67,15 @@ async function getAIResponse(prompt = "") {
 	  },
 	  body: JSON.stringify(requestBody),
 	});
-  
+	
+	if (!response.ok && response.status == 429) {
+		window.alert('We have reached our rate limit for AI usage, please try again later.');
+		throw new Error('RATE LIMITED: please try again later shortly.')
+	} else if (!response.ok) {
+		window.alert('Encountered unknown errors while prompting the AI, please try again later.')
+		throw new Error('error :(');
+	}
+
 	const data = await response.json();
 	return data.candidates[0].content.parts[0].text;
   }
