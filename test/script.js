@@ -12,10 +12,9 @@ if (selected == "dark") {
   }
 }
 
-
 const params = new URLSearchParams(window.location.search);
-const testType = params.get('type');
-const testIncludes = params.getAll('include');
+const testType = params.get("type");
+const testIncludes = params.getAll("include");
 document.title = `${testType.toUpperCase()} practice - Writemaster`;
 
 let timeLeft = 0; // seconds
@@ -26,12 +25,14 @@ function StartTimer(time) {
   intervalId = setInterval(UpdateTimer, 100);
 }
 
-function UpdateTimer() { // please make variable names more self explanatory :(
+function UpdateTimer() {
+  // please make variable names more self explanatory :(
   let et = Math.ceil((timeLeft - Date.now()) / 1000);
   if (et <= 0) {
     clearInterval(intervalId);
     TimerElement.innerHTML = "0:00";
-    TimerElement.style = /*css*/ "color:var(--foreground-color)";
+    TimerElement.style = /*css*/ "color:var(--accent-color)";
+    Submit();
     return;
   } else {
     TimerElement.style = "";
@@ -43,42 +44,59 @@ function UpdateTimer() { // please make variable names more self explanatory :(
   if (hours == 0) {
     TimerElement.innerHTML = `${minutes}:${seconds.padStart(2, "0")}`;
   } else {
-    TimerElement.innerHTML = `${hours}:${minutes.padStart(2, "0")}:${seconds.padStart(2, "0")}`;
+    TimerElement.innerHTML = `${hours}:${minutes.padStart(
+      2,
+      "0"
+    )}:${seconds.padStart(2, "0")}`;
   }
 }
-
+document.getElementById("submit_btn").addEventListener("click", () => {
+  clearInterval(intervalId);
+  TimerElement.style = /*css*/ "color:var(--accent-color)";
+  Submit();
+});
+function Submit() {
+  //tbh idk what should be done here
+  //leave that for qh
+  console.log("Test is done!");
+  alert("uiia");
+}
 async function getAIResponse(prompt = "") {
-	const apiKey = "AIzaSyB3VuMDIBnlOkJL2KI3phT8iPHmfjD14KM";
-	const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-  
-	const requestBody = {
-	  contents: [
-		{
-		  role: "user",
-		  parts: [{ text: prompt }],
-		},
-	  ],
-	};
-  
-	const response = await fetch(url, {
-	  method: "POST",
-	  headers: {
-		"Content-Type": "application/json",
-	  },
-	  body: JSON.stringify(requestBody),
-	});
-	
-	if (!response.ok && response.status == 429) {
-		window.alert('We have reached our rate limit for AI usage, please try again later.');
-		throw new Error('RATE LIMITED: please try again later shortly.')
-	} else if (!response.ok) {
-		window.alert('Encountered unknown errors while prompting the AI, please try again later.')
-		throw new Error('error :(');
-	}
+  const apiKey = "AIzaSyB3VuMDIBnlOkJL2KI3phT8iPHmfjD14KM";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-	const data = await response.json();
-	return data.candidates[0].content.parts[0].text;
+  const requestBody = {
+    contents: [
+      {
+        role: "user",
+        parts: [{ text: prompt }],
+      },
+    ],
+  };
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
+  });
+
+  if (!response.ok && response.status == 429) {
+    window.alert(
+      "We have reached our rate limit for AI usage, please try again later."
+    );
+    throw new Error("RATE LIMITED: please try again later shortly.");
+  } else if (!response.ok) {
+    window.alert(
+      "Encountered unknown errors while prompting the AI, please try again later."
+    );
+    throw new Error("error :(");
   }
+
+  const data = await response.json();
+  return data.candidates[0].content.parts[0].text;
+}
 
 // getAIResponse(`I'm practicing for ${sessionStorage.getItem('type')}, can you generate a writing question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you don't need to provide pictures or anything. Thanks.`).then(response => {
 //   console.log(response);
