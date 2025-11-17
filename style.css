@@ -75,8 +75,6 @@ code {
 }
 .box,
 .big.box {
-  -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 .box {
@@ -177,7 +175,6 @@ img,
 .material-symbols-outlined,
 br {
   user-select: none;
-  -moz-user-select: none;
 }
 
 /* Add alternating row colors for better readability */
@@ -294,6 +291,8 @@ header {
 }
 #test_format .sb {
   width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 #test_format .sb_inner {
   width: 100%;

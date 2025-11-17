@@ -29,7 +29,9 @@
 .timer code {
   margin-left: 2.5%;
 }
-
+.submit {
+  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
+}
 .submit {
   grid-area: submit;
   width: 100%;
