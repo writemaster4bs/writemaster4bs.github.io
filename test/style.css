@@ -17,6 +17,7 @@
 .test h1,
 .section {
   margin: 1rem;
+  margin-bottom: 5rem;
 }
 
 .test h1 {

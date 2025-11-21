@@ -158,22 +158,17 @@ function checkGenerationFinished() {
 }
 /*on start */
 
-document.getElementById("title").innerText = `${translationKeys[
-  testType
-].toUpperCase()} PRACTICE TEST`;
-if (testType != "toeic") {
-  setGenerationFinished(testIncludes.length);
-  if (testIncludes.includes("writing1")) {
-    const section = document.createElement("div");
+function generateIELTSWritingQuestion(task) {
+	const section = document.createElement("div");
     const sectionTitle = document.createElement("h3");
     const sectionQuestion = document.createElement("p");
     const sectionTextbox = document.createElement("textarea");
     const sectionResponse = document.createElement("p");
     section.className = "section";
-    sectionTitle.innerText = "Writing task 1";
+    sectionTitle.innerText = `Writing task ${task}`;
 
     getAIResponse(
-      `Generate a ${translationKeys[testType]} Writing Task 1 question.
+      `Generate a ${translationKeys[testType]} Writing Task ${task} question.
 
 Requirements:
 - Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
@@ -196,5 +191,17 @@ Requirements:
     section.appendChild(sectionResponse);
 
     document.getElementById("test").appendChild(section);
+}
+
+document.getElementById("title").innerText = `${translationKeys[
+  testType
+].toUpperCase()} PRACTICE TEST`;
+if (testType != "toeic") {
+  setGenerationFinished(testIncludes.length);
+  if (testIncludes.includes("writing1")) {
+    generateIELTSWritingQuestion(1);
+  }
+  if (testIncludes.includes("writing2")) {
+    generateIELTSWritingQuestion(2);
   }
 }
