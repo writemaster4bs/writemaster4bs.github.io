@@ -86,7 +86,7 @@ TOEIC_Slider.addEventListener("input", UpdateSliders);
 IELTS_Slider.addEventListener("input", UpdateSliders);
 let GenerateTest = document.getElementById("generate_test");
 let Errors = document.getElementById("errors");
-let IncludeListening = document.getElementById("include_listening");
+//let IncludeListening = document.getElementById("include_listening");
 let IncludeWriting = document.getElementById("include_writing");
 let IncludeReading = document.getElementById("include_reading");
 
@@ -104,18 +104,18 @@ GenerateTest.addEventListener("click", () => {
     Errors.innerHTML = "You must select one type of test!";
     return;
   }
-  var HasListening = IncludeListening.checked;
+  //var HasListening = IncludeListening.checked;
   var HasReading = IncludeReading.checked;
   var HasWriting = IncludeWriting.checked;
   Errors.innerHTML = "";
-  if (!(HasListening || HasReading || HasWriting)) {
+  if (!(HasReading || HasWriting)) {
     Errors.innerHTML = "You must select at least one skill to practice!";
     return;
   }
 
   console.log("===TEST DATA===");
   console.log(`Type: ${TypeOfTest.toUpperCase()}`);
-  console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
+  //console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
   console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
   console.log(`Include Writing: ${HasWriting ? "YES" : "NO"}`);
   if (WhetherSlidersMatter) {
@@ -137,7 +137,7 @@ GenerateTest.addEventListener("click", () => {
   params.set("type", TypeOfTest);
   // right side of && evaluates (run) if left is true, otherwise it stops immediately
   // basically a 'shorthand if' if you will
-  HasListening && params.append("include", "listening");
+  //HasListening && params.append("include", "listening");
   HasReading && params.append("include", "reading");
   HasWriting && params.append("include", "writing");
   // Who in their right mind thinks of short-circuit evaluation?

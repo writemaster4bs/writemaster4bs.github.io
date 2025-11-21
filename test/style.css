@@ -37,7 +37,13 @@
   width: 100%;
   height: 10rem;
 }
-
+.response {
+  height: 10rem;
+  overflow-y: scroll;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+}
 .timer {
   grid-area: timer;
   flex-direction: row;
