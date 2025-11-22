@@ -33,8 +33,14 @@ let timeLeft = 0; // seconds
 let intervalId = 0; // what
 const TimerElement = document.getElementById("timer");
 
-function startTimer(time) {
+function setTimer(time) { // me when i spaghetti code
   timeLeft = Date.now() + 1000 * time;
+  updateTimer();
+  timeLeft = time;
+}
+
+function startTimer() {
+  timeLeft = Date.now() + 1000 * timeLeft;
   intervalId = setInterval(updateTimer, 100);
 }
 
@@ -72,7 +78,7 @@ ActionButton.addEventListener("click", () => {
     document.getElementById("readyMessage").remove();
     ActionButton.innerHTML = "Submit";
     TestBox.className = "";
-    startTimer(60 * 60); //can and will be changed later
+    startTimer();
     enableTest();
   } else {
     window.confirm("Are you sure you want to submit?") && submit();
@@ -114,7 +120,8 @@ function submit() {
   ${e.answer.value}\n
   The question is:\n
   ${e.question}\n\n
-  Notes: Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at THE END of your response. Don't grade too sparingly, but do not be too harsh either, just rate as if you were an actual grader. Thanks.`).then((r) => {
+  Notes: Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at THE END of your response. ONLY SAY THE ACTUAL GRADING AND NOT ANYTHING ELSE, NO "here's what your score would've been with my improved essay." 
+  VERY IMPORTANT: Don't grade too harsh, but not too sparingly either. Rate realisticly and objectively, do not just pick an average-ish score everytime. Thanks.`).then((r) => {
       e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
         r
       )}</div>`;
@@ -143,12 +150,12 @@ async function getAIResponse(prompt = "") {
     )}`
   );
 
-  if (response.status == 429) {
+  if (response.error?.code == 429) {
     window.alert(
       "We have reached our rate limit for AI usage, please try again later."
     );
     throw new Error("RATE LIMITED: please try again later shortly.");
-  } else if (!response.ok) {
+  } else if (response.error?.code) {
     window.alert(
       "Encountered unknown errors while prompting the AI, please try again later."
     );
@@ -212,10 +219,14 @@ document.getElementById("title").innerText = `${translationKeys[
   testType
 ].toUpperCase()} PRACTICE TEST`;
 if (testType != "toeic") {
+  let time = 0;
   if (testIncludes.includes("writing1")) {
     Generate("Writing Task 1");
+    time += 20 * 60; // 20 minutes
   }
   if (testIncludes.includes("writing2")) {
     Generate("Writing Task 2");
+    time += 40 * 60; // 40 minutes
   }
+  setTimer(time);
 }
