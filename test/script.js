@@ -111,10 +111,10 @@ function submit() {
   Questions.forEach((e) => {
     e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
     getAIResponse(`Generate a helpful review for the following answer:\n
-    ${e.answer.value}\n
-    The question is:\n
-    ${e.question}\n\n
-    Notes: Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at THE END of your response. Don't grade too sparingly, but do not be too harsh either, just rate as if you were an actual grader. Thanks.`).then((r) => {
+  ${e.answer.value}\n
+  The question is:\n
+  ${e.question}\n\n
+  Notes: Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at THE END of your response. Don't grade too sparingly, but do not be too harsh either, just rate as if you were an actual grader. Thanks.`).then((r) => {
       e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
         r
       )}</div>`;
@@ -133,7 +133,8 @@ async function getAIResponse(prompt = "") {
     await new Promise((resolve) =>
       setTimeout(resolve, 5000 + Math.random() * 2000)
     );
-    return `This is a response to the question "${prompt}"`;
+    //return `This is a response to the question "${prompt}"`;
+  return prompt
   }
 
   const response = await fetch(
@@ -188,10 +189,10 @@ function Generate(name) {
     `Generate a ${translationKeys[testType]} ${name} question.
     
     Requirements:
-    - Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
-    - If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
-    - The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
-    - Do not add anything before or after the question. Output the question alone.`
+  - Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
+  - If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
+  - The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
+  - Do not add anything before or after the question. Output the question alone.`
   ).then((response) => {
     sectionQuestion.innerHTML = marked.parse(response);
     Questions.push({
