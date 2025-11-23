@@ -184,7 +184,7 @@ function checkGenerationFinished() {
   questionsLeftToGenerate <= 0 && readyTest();
 }
 
-function Generate(name) {
+function Generate(name, isReading = false) {
   questionsLeftToGenerate++;
   const section = document.createElement("div");
   const sectionTitle = document.createElement("h3");
@@ -200,9 +200,18 @@ function Generate(name) {
   
 Requirements:
 - Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
-- If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
-- The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
-- Do not add anything before or after the question. Output the question alone.`
+${
+  isReading
+    ? ""
+    : "- If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts."
+}
+- The question should be fully self-contained and formatted exactly as a standard IELTS ${name} prompt.
+- Do not add anything before or after the question. Output the question alone.
+${
+  isReading
+    ? "- Please output all reading questions in your response, ensuring a newline after every question and potential answer."
+    : ""
+}`
   ).then((response) => {
     sectionQuestion.innerHTML = marked.parse(response);
     Questions.push({
@@ -227,6 +236,10 @@ document.getElementById("title").innerText = `${translationKeys[
 ].toUpperCase()} PRACTICE TEST`;
 if (testType != "toeic") {
   let time = 0;
+  if (testIncludes.includes("reading")) {
+    Generate("Reading Tasks", true);
+    time += 60 * 60; // 60 minutes
+  }
   if (testIncludes.includes("writing1")) {
     Generate("Writing Task 1");
     time += 20 * 60; // 20 minutes
