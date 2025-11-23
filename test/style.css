@@ -45,15 +45,42 @@
   padding: 10px;
   border-radius: 10px;
 }
+
 .timer {
   grid-area: timer;
   flex-direction: row;
 }
+
 .blurry {
   filter: blur(10px);
   pointer-events: none;
   cursor: not-allowed;
+  user-select: none;
 }
+
+.ready {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  left: 50%;
+  top: 40%;
+  transform: translateX(-50%);
+  z-index: 2;
+  color: var(--accent-color);
+
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.ready span,
+.ready h2 {
+  padding: 0;
+  margin: 0;
+}
+
 .timer p,
 .timer h3 {
   margin: 0px;
@@ -62,12 +89,15 @@
 .timer p {
   margin-right: 2.5%;
 }
+
 .timer code {
   margin-left: 2.5%;
 }
+
 .submit {
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
+
 .submit {
   grid-area: submit;
   width: 100%;

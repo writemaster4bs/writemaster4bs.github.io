@@ -36,8 +36,14 @@ let timeLeft = 0; // seconds
 let intervalId = 0; // what
 const TimerElement = document.getElementById("timer");
 
-function startTimer(time) {
+function setTimer(time) { // me when i spaghetti code
   timeLeft = Date.now() + 1000 * time;
+  updateTimer();
+  timeLeft = time;
+}
+
+function startTimer() {
+  timeLeft = Date.now() + 1000 * timeLeft;
   intervalId = setInterval(updateTimer, 100);
 }
 
@@ -72,9 +78,10 @@ let testTime = 0;
 ActionButton.addEventListener("click", () => {
   if (stage == 0) {
     stage = 1;
+    document.getElementById("readyMessage").remove();
     ActionButton.innerHTML = "Submit";
     TestBox.className = "";
-    startTimer(testTime);
+    startTimer();
     enableTest();
   } else {
     window.confirm("Are you sure you want to submit?") && submit();
@@ -82,7 +89,8 @@ ActionButton.addEventListener("click", () => {
 });
 
 function readyTest() {
-  document.getElementById("testrdy").innerHTML = "";
+  document.getElementById("testrdy").remove();
+  document.getElementById("readyMessage").className = "ready";
   ActionButton.disabled = false;
 }
 
@@ -112,12 +120,20 @@ function submit() {
   Questions.forEach((e) => {
     e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
     getAIResponse(`Generate a helpful review for the following answer:\n
-${e.answer.value}\n
-The question is:\n
-${e.question}\n`).then((r) => {
+  ${e.answer.value}\n
+  The question is:\n
+  ${e.question}\n\n
+  Notes: Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at THE END of your response. ONLY SAY THE ACTUAL GRADING AND NOT ANYTHING ELSE, NO "here's what your score would've been with my improved essay." 
+  VERY IMPORTANT: Don't grade too harsh, but not too sparingly either. Rate realisticly and objectively, do not just pick an average-ish score everytime. Thanks.`).then((r) => {
       e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
         r
       )}</div>`;
+      
+      if (testType != "toeic") {
+        e.score = r.match(/Your band: (\d\.\d+)/i)[1]
+      } else {
+        e.score = r.match(/Your score: (\d+)/i)[1]
+      }
     });
   });
 }
@@ -127,7 +143,8 @@ async function getAIResponse(prompt = "") {
     await new Promise((resolve) =>
       setTimeout(resolve, 5000 + Math.random() * 2000)
     );
-    return `This is a response to the question "${prompt}"`;
+    //return `This is a response to the question "${prompt}"`;
+  return prompt
   }
 
   const response = await fetch(
@@ -136,12 +153,12 @@ async function getAIResponse(prompt = "") {
     )}`
   );
 
-  if (response.status == 429) {
+  if (response.error?.code == 429) {
     window.alert(
       "We have reached our rate limit for AI usage, please try again later."
     );
     throw new Error("RATE LIMITED: please try again later shortly.");
-  } else if (!response.ok) {
+  } else if (response.error?.code) {
     window.alert(
       "Encountered unknown errors while prompting the AI, please try again later."
     );
@@ -153,11 +170,6 @@ async function getAIResponse(prompt = "") {
   return data.candidates[0].content.parts[0].text;
 }
 
-// CODE STARTS HERE
-// is hpol or aqme a better username/displayname (pls answer i need to pick)
-//hpol
-// hpol it is (originally it was hybridpolaris but i shortened to hpol)
-
 let questionsLeftToGenerate = 0;
 /*function setGenerationFinished(questions) {
   questionsLeftToGenerate = questions;
@@ -167,9 +179,8 @@ function checkGenerationFinished() {
   questionsLeftToGenerate--;
   questionsLeftToGenerate <= 0 && readyTest();
 }
-/*on start */
-function Generate(name, time) {
-  testTime += time;
+
+function Generate(name) {
   questionsLeftToGenerate++;
   const section = document.createElement("div");
   const sectionTitle = document.createElement("h3");
@@ -178,15 +189,16 @@ function Generate(name, time) {
   const sectionResponse = document.createElement("p");
   section.className = "section";
   sectionTitle.innerText = name;
-
+  
+  // just found out if you change the indentation there the thing breaks
   getAIResponse(
     `Generate a ${translationKeys[testType]} ${name} question.
-
-Requirements:
-- Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
-- If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
-- The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
-- Do not add anything before or after the question. Output the question alone.`
+    
+    Requirements:
+  - Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
+  - If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
+  - The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
+  - Do not add anything before or after the question. Output the question alone.`
   ).then((response) => {
     sectionQuestion.innerHTML = marked.parse(response);
     Questions.push({
@@ -196,7 +208,7 @@ Requirements:
     });
     checkGenerationFinished();
   });
-
+  
   section.appendChild(sectionTitle);
   section.appendChild(sectionQuestion);
   section.appendChild(sectionTextbox);
@@ -204,14 +216,20 @@ Requirements:
 
   document.getElementById("test").appendChild(section);
 }
+
+/*on start */
 document.getElementById("title").innerText = `${translationKeys[
   testType
 ].toUpperCase()} PRACTICE TEST`;
 if (testType != "toeic") {
+  let time = 0;
   if (testIncludes.includes("writing1")) {
-    Generate("Writing Task 1", 20 * 60);
+    Generate("Writing Task 1");
+    time += 20 * 60; // 20 minutes
   }
   if (testIncludes.includes("writing2")) {
-    Generate("Writing Task 2", 40 * 60);
+    Generate("Writing Task 2");
+    time += 40 * 60; // 40 minutes
   }
+  setTimer(time);
 }
