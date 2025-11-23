@@ -147,10 +147,10 @@ async function getAIResponse(prompt = "") {
     await new Promise((resolve) =>
       setTimeout(resolve, 2000 + Math.random() * 1000)
     );
-    //return `This is a response to the question "${prompt}"`;
-    return prompt;
+    return `This is a response to the question "${prompt}"`;
+    //return prompt;
   }
-
+  return;
   const response = await fetch(
     `https://writemaster-api.vercel.app/api/ai?prompt=${encodeURIComponent(
       prompt
@@ -184,7 +184,7 @@ function checkGenerationFinished() {
   questionsLeftToGenerate <= 0 && readyTest();
 }
 
-function Generate(name, isReading = false) {
+function Generate(name, isReading = false, from = 0, to = 0, exact = "") {
   questionsLeftToGenerate++;
   const section = document.createElement("div");
   const sectionTitle = document.createElement("h3");
@@ -197,21 +197,20 @@ function Generate(name, isReading = false) {
   // just found out if you change the indentation there the thing breaks
   getAIResponse(
     `Generate a ${translationKeys[testType]} ${name} question.
-  
+
 Requirements:
-- Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
-${
-  isReading
-    ? ""
-    : "- If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts."
-}
-- The question should be fully self-contained and formatted exactly as a standard IELTS ${name} prompt.
-- Do not add anything before or after the question. Output the question alone.
-${
-  isReading
-    ? "- Please output all reading questions in your response, ensuring a newline after every question and potential answer."
-    : ""
-}`
+- Output **only** the question text. Do not include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
+${isReading
+      ? `- Produce **only** reading questions numbered from ${from} to ${to}, Remember, ${exact}. Do **not** generate any questions outside this range.
+- Do not summarize, shorten, merge, or omit any parts of the selected questions.
+- Ensure every selected question and every answer option (if any) appears in full.
+- Place a newline after each question and after each answer option.`
+      : "- If the task involves data (charts, graphs, comparisons, processes, etc.), represent all data **only** using Markdown tables. Do not use images, ASCII, or non-table charts."
+    }
+- The question must be fully self-contained and formatted exactly like a standard ${translationKeys[testType]
+    } ${name} prompt.
+- Do not add anything before or after the question text. Output **the question text alone**.
+- If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.`
   ).then((response) => {
     sectionQuestion.innerHTML = marked.parse(response);
     Questions.push({
@@ -237,7 +236,42 @@ document.getElementById("title").innerText = `${translationKeys[
 if (testType != "toeic") {
   let time = 0;
   if (testIncludes.includes("reading")) {
-    Generate("Reading Tasks", true);
+    Generate(
+      "Reading Tasks [SECTION 1]",
+      true,
+      1,
+      7,
+      "all questions use the same text: seven items (suitcases/classes/websites/...) of a list (A–G), and that the answerer should select which item each statement refers to. Maintain single-context integrity"
+    );
+    Generate(
+      "Reading Tasks [SECTION 1]",
+      true,
+      8,
+      14,
+      "all questions use the same text, and that the answerer should determine whether statements agree with the information. Maintain single-context integrity"
+    );
+    Generate(
+      "Reading Tasks [SECTION 2]",
+      true,
+      15,
+      20,
+      "all questions use the same text, and that the answerer should provide responses according to the passage. Maintain single-context integrity"
+    );
+    Generate(
+      "Reading Tasks [SECTION 2]",
+      true,
+      21,
+      27,
+      "all questions use the same text, and that the answerer should complete the notes using ONE WORD ONLY from the passage. Maintain single-context integrity"
+    );
+    Generate(
+      "Reading Tasks [SECTION 3]",
+      true,
+      28,
+      40,
+      "all questions use the same long text. Include paragraph heading matching (Q28–36) and summary completion (Q37–40). Maintain single-context integrity"
+    );
+
     time += 60 * 60; // 60 minutes
   }
   if (testIncludes.includes("writing1")) {
