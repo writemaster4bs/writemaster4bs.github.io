@@ -41,7 +41,7 @@
 .response {
   height: 10rem;
   overflow-y: scroll;
-  border: 1px solid black;
+  border: 1px solid var(--foreground-color);
   padding: 10px;
   border-radius: 10px;
 }
@@ -119,4 +119,8 @@ input:disabled,
 textarea:disabled {
   opacity: 80%;
   cursor: not-allowed;
+}
+
+.ready .loader {
+  border-color: var(--accent-color);
 }
