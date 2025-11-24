@@ -112,6 +112,9 @@ function enableTest() {
 let Questions = [];
 function submit() {
   stage = 2;
+  let score = 0;
+  let count = 0;
+  let generated = 0;
   TimerElement.style = /*css*/ "color:var(--accent-color)";
   clearInterval(intervalId);
   console.log("Test is done!");
@@ -119,26 +122,43 @@ function submit() {
   disableTest();
   ActionButton.disabled = true;
   Questions.forEach((e) => {
+    generated++;
     e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
+
     getAIResponse(`Generate a helpful review for the following answer:\n
 ${e.answer.value}\n
 The question is:\n
 ${e.question}\n\n
 Requirements:
-- Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at the end of your response. Please omit any unnecessary text or suggestions." 
-- Don't grade too harsh, but not too sparingly either. Please generate the most accurate score you could manage.`).then(
-      (r) => {
-        e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
-          r
-        )}</div>`;
-
-        if (testType != "toeic") {
-          e.score = r.match(/Your band: (\d\.\d+)/i)[1];
-        } else {
-          e.score = r.match(/Your score: (\d+)/i)[1];
-        }
+- Evaluate the quality, clarity, correctness, and completeness of the answer.
+- Provide a brief constructive review.
+- At the end, output exactly one integer score from 0 to 100 in the format: "Your score: XX".
+- No other scoring formats or text after the score.
+- Be fair but not harsh.`).then((r) => {
+      e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
+        r
+      )}</div>`;
+      if (enableAI) {
+        e.score = parseInt(r.match(/Your score:\s*(\d+)/i)[1]);
+      } else {
+        e.score = 69; //funny haha number if AI is disabled
       }
-    );
+      score += e.score;
+      count++;
+      generated--;
+      if (generated == 0) {
+        score /= count;
+        TestBox.innerHTML += /*html*/ `<h1>Your score is <code>${score.toFixed(
+          1
+        )}<small>/100</small></code>, corresponding to a ${
+          testType == "toeic"
+            ? `score of <code>${Math.floor(score * 10)}</code>`
+            : `band of <code>${(Math.floor(score * 0.9) / 10).toFixed(
+                1
+              )}</code>`
+        }</h1>`;
+      }
+    });
   });
 }
 
@@ -150,7 +170,6 @@ async function getAIResponse(prompt = "") {
     return `This is a response to the question "${prompt}"`;
     //return prompt;
   }
-  return;
   const response = await fetch(
     `https://writemaster-api.vercel.app/api/ai?prompt=${encodeURIComponent(
       prompt
@@ -199,17 +218,25 @@ function Generate(name, isReading = false, from = 0, to = 0, exact = "") {
     `Generate a ${translationKeys[testType]} ${name} question.
 
 Requirements:
-- Output **only** the question text. Do not include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
-${isReading
-      ? `- Produce **only** reading questions numbered from ${from} to ${to}, Remember, ${exact}. Do **not** generate any questions outside this range.
+- Output **only** the question text and its required reading passage**. Do **not** include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
+- The response **must** begin with the full reading passage, followed by a blank line, followed by the question(s).
+
+
+${
+  isReading
+    ? `- Produce **only** reading questions numbered from ${from} to ${to}. Remember, ${exact}. Do **not** generate any questions outside this range.
+- The passage must be original, complete, and fully self-contained.
 - Do not summarize, shorten, merge, or omit any parts of the selected questions.
 - Ensure every selected question and every answer option (if any) appears in full.
 - Place a newline after each question and after each answer option.`
-      : "- If the task involves data (charts, graphs, comparisons, processes, etc.), represent all data **only** using Markdown tables. Do not use images, ASCII, or non-table charts."
-    }
-- The question must be fully self-contained and formatted exactly like a standard ${translationKeys[testType]
+    : `- If the task involves data (charts, graphs, comparisons, processes, etc.), represent all data **only** using Markdown tables. Do not use images, ASCII, or non-table charts.`
+}
+
+- The passage and questions must be fully self-contained and formatted exactly like a standard ${
+      translationKeys[testType]
     } ${name} prompt.
-- Do not add anything before or after the question text. Output **the question text alone**.
+- Do not add anything before or after the passage + question text.
+- Output the **complete** passage and question text, and nothing else.
 - If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.`
   ).then((response) => {
     sectionQuestion.innerHTML = marked.parse(response);
@@ -282,5 +309,64 @@ if (testType != "toeic") {
     Generate("Writing Task 2");
     time += 40 * 60; // 40 minutes
   }
+  setTimer(time);
+} else {
+  // TOEIC test generation logic
+  let time = 0;
+
+  // READING (TOEIC L&R Part 5–7)
+  if (testIncludes.includes("reading")) {
+    // PART 5: Incomplete Sentences
+    Generate(
+      "Reading Part 5 (Incomplete Sentences)",
+      true,
+      1,
+      30,
+      "provide sentence-level grammar & vocabulary, one blank, options A–D"
+    );
+
+    // PART 6: Text Completion
+    Generate(
+      "Reading Part 6 (Text Completion)",
+      true,
+      31,
+      46,
+      "provide four short texts, each with four blanks. Maintain contextual coherence"
+    );
+
+    // PART 7: Single Passages
+    Generate(
+      "Reading Part 7 (Single Passages)",
+      true,
+      47,
+      75,
+      "provide single texts (emails, notices, articles) with 2–5 questions each"
+    );
+
+    // PART 7: Multiple Passages
+    Generate(
+      "Reading Part 7 (Double/Multiple Passages)",
+      true,
+      76,
+      100,
+      "provide paired or multi-part texts; 5–6 questions per set"
+    );
+
+    time += 75 * 60; // TOEIC Reading section duration
+  }
+
+  if (testIncludes.includes("writing1")) {
+    Generate("TOEIC Writing Task 6 (Respond to a Written Request)");
+    time += 10 * 60;
+  }
+  if (testIncludes.includes("writing1")) {
+    Generate("TOEIC Writing Task 7 (Respond to a Written Request)");
+    time += 10 * 60;
+  }
+  if (testIncludes.includes("writing2")) {
+    Generate("TOEIC Writing Task 8 (Essay)");
+    time += 10 * 60;
+  }
+
   setTimer(time);
 }

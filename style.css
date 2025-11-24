@@ -243,7 +243,7 @@ header {
   grid-auto-flow: row;
   grid-template-areas:
     "left_bar user_interface generate_test"
-    "left_bar user_interface try_our_gpt";
+    "left_bar user_interface generate_test";
 }
 .left_bar {
   grid-area: left_bar;
@@ -350,7 +350,7 @@ header {
     grid-template-areas:
       "left_bar left_bar"
       "user_interface user_interface"
-      "generate_test try_our_gpt";
+      "generate_test generate_test";
   }
   .left_bar {
     flex-direction: row;
