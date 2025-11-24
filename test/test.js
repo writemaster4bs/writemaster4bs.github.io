@@ -165,13 +165,13 @@ Requirements:
     const picture = images[Math.floor(Math.random() * images.length)];
     const questionTextElement = document.createElement("p");
     const questionPictureElement = document.createElement("img");
-    questionTextElement.innerHTML =  marked.parse("Write a sentence based on the picture given.");
+    questionTextElement.innerHTML =  marked.parse("Write **ONE** sentence to describe the picture above.");
     questionPictureElement.src = `${window.location.origin}/Questions/TOEIC/Part1/${picture}`;
     sectionQuestion.appendChild(questionPictureElement);
     sectionQuestion.appendChild(questionTextElement);
     sectionTextbox.className = "short";
     Test.Questions.questions.push({
-      question: "Write a sentence based on the picture given. For the AI grading this, assume there is a picure, and assume the exam taker is describing correctly. Rate based on how detailed it is, and **do not mention this.**",
+      question: "Write **ONE** sentence based on the picture given. For the AI grading this, assume there is a picure, and assume the exam taker is describing correctly. Rate based on how detailed it is, and **do not mention this.**",
       answer: sectionTextbox,
       response: sectionResponse,
     });
