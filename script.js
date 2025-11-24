@@ -93,6 +93,7 @@ let IELTSIncludeWritingPart2 = document.getElementById("include_writing2");
 let TOEICIncludeWritingPart6 = document.getElementById("include_writing6");
 let TOEICIncludeWritingPart7 = document.getElementById("include_writing7");
 let TOEICIncludeWritingPart8 = document.getElementById("include_writing8");
+let TOEICIncludeWritingParts1to5 = document.getElementById("include_writing1to5");
 
 GenerateTest.addEventListener("click", () => {
   /*var selected = document.querySelector('input[name="test_format"]:checked');
@@ -115,13 +116,15 @@ GenerateTest.addEventListener("click", () => {
   var TOEICHasWritingPart6 = TOEICIncludeWritingPart6.checked;
   var TOEICHasWritingPart7 = TOEICIncludeWritingPart7.checked;
   var TOEICHasWritingPart8 = TOEICIncludeWritingPart8.checked;
+  var TOEICHasWritingParts1to5 = TOEICIncludeWritingParts1to5.checked;
   Errors.innerHTML = "";
   if (!(HasReading 
     || IELTSHasWritingPart1 
     || IELTSHasWritingPart2 
     || TOEICHasWritingPart6
     || TOEICHasWritingPart7
-    || TOEICHasWritingPart8)) {
+    || TOEICHasWritingPart8
+    || TOEICHasWritingParts1to5)) {
     Errors.innerHTML = "You must select at least one skill to practice!";
     return;
   }
@@ -161,6 +164,7 @@ GenerateTest.addEventListener("click", () => {
     if (TOEICHasWritingPart6) parts += "writing6 ";
     if (TOEICHasWritingPart7) parts += "writing7 ";
     if (TOEICHasWritingPart8) parts += "writing8 ";
+    if (TOEICHasWritingParts1to5) parts += "writing1to5 ";
   }
 
   params.append("include", parts.slice(0, -1));

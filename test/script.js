@@ -209,6 +209,14 @@ if (testType != "toeic") {
     time += 75 * 60; // TOEIC Reading section duration
   }
 
+  if (testIncludes.includes("writing1to5")) {
+    Test.Questions.generateTOEICWritingSection1(1);
+    Test.Questions.generateTOEICWritingSection1(2);
+    Test.Questions.generateTOEICWritingSection1(3);
+    Test.Questions.generateTOEICWritingSection1(4);
+    Test.Questions.generateTOEICWritingSection1(5);
+    time = 10 * 60;
+  }
   if (testIncludes.includes("writing6")) {
     Test.Questions.generateWriting("Writing Task 6 (Respond to a Written Request)", "TOEIC");
     time += 10 * 60;
@@ -218,8 +226,8 @@ if (testType != "toeic") {
     time += 10 * 60;
   }
   if (testIncludes.includes("writing8")) {
-    Test.Questions.generateWriting("Writing Task 8 (Essay)", "TOEIC");
-    time += 10 * 60;
+    Test.Questions.generateWriting("Writing Task 8 (Opinion Essay)", "TOEIC");
+    time += 30 * 60;
   }
 
   Test.Timer.set(time);

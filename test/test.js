@@ -129,6 +129,68 @@ Requirements:
   
     document.getElementById("test").appendChild(section);
   }
+
+  static generateTOEICWritingSection1(task) {
+    this.questionsLeftToGenerate++;
+    const section = document.createElement("div");
+    const sectionTitle = document.createElement("h3");
+    const sectionQuestion = document.createElement("div");
+    const sectionTextbox = document.createElement("textarea");
+    const sectionResponse = document.createElement("p");
+    section.className = "section";
+    sectionTitle.innerText = `TOEIC Writing Task ${task} (Write a sentence on a picture)`;
+    
+    const images = [
+      "AtBreathtaking.png",
+      "BookshelfLibrary.png",
+      "BreakfastToast.png",
+      "BroomAutumn.png",
+      "CashierItems.png",
+      "CheckupX-ray.png",
+      "ChefKitchen.png",
+      "ColleaguesBrainstorm.png",
+      "FallBlock.png",
+      "FamilyBackyard.png",
+      "GuitarPark.png",
+      "LaptopCoffeeShop.png",
+      "LaptopOffice.png",
+      "PaintbrushCanvas.png",
+      "ReviewColleague.png",
+      "StudentLaboratory.png",
+      "StudentsHomework.png",
+      "SuitcaseAirport.png",
+      "UmbrellaRainy.png"
+    ]
+
+    const picture = images[Math.floor(Math.random() * images.length)];
+    const questionTextElement = document.createElement("p");
+    const questionPictureElement = document.createElement("img");
+    questionTextElement.innerHTML =  marked.parse("Write a sentence based on the picture given.");
+    questionPictureElement.src = `${window.location.origin}/Questions/TOEIC/Part1/${picture}`;
+    sectionQuestion.appendChild(questionPictureElement);
+    sectionQuestion.appendChild(questionTextElement);
+    sectionTextbox.className = "short";
+    Test.Questions.questions.push({
+      question: "Write a sentence based on the picture given. For the AI grading this, assume there is a picure, and assume the exam taker is describing correctly. Rate based on how detailed it is, and **do not mention this.**",
+      answer: sectionTextbox,
+      response: sectionResponse,
+    });
+
+    new Promise((resolve) =>
+      setTimeout(resolve, 2000 + Math.random() * 1000)
+    ).then(
+      this.checkGenerationFinished.bind(this)
+    );
+    // do this so that this doesn't finish all before the other parts
+    // which makes the test "ready" before the other parts load
+  
+    section.appendChild(sectionTitle);
+    section.appendChild(sectionQuestion);
+    section.appendChild(sectionTextbox);
+    section.appendChild(sectionResponse);
+  
+    document.getElementById("test").appendChild(section);
+  }
 }
 
 export class Test {
@@ -138,7 +200,11 @@ export class Test {
   static Questions = Questions;
 
   static ready() {
-    document.getElementById("testrdy").remove();
+    try {
+      document.getElementById("testrdy").remove();
+    } catch (error) {
+      // do nothing
+    }
     document.getElementById("readyMessage").className = "ready";
     this.ActionButton.disabled = false;
   }
