@@ -86,11 +86,13 @@ TOEIC_Slider.addEventListener("input", UpdateSliders);
 IELTS_Slider.addEventListener("input", UpdateSliders);
 let GenerateTest = document.getElementById("generate_test");
 let Errors = document.getElementById("errors");
+//let IncludeListening = document.getElementById("include_listening");
+let IncludeReading = document.getElementById("include_reading");
 let IELTSIncludeWritingPart1 = document.getElementById("include_writing1");
 let IELTSIncludeWritingPart2 = document.getElementById("include_writing2");
-//let IncludeListening = document.getElementById("include_listening");
-let IncludeWriting = document.getElementById("include_writing");
-let IncludeReading = document.getElementById("include_reading");
+let TOEICIncludeWritingPart6 = document.getElementById("include_writing6");
+let TOEICIncludeWritingPart7 = document.getElementById("include_writing7");
+let TOEICIncludeWritingPart8 = document.getElementById("include_writing8");
 
 GenerateTest.addEventListener("click", () => {
   /*var selected = document.querySelector('input[name="test_format"]:checked');
@@ -110,17 +112,26 @@ GenerateTest.addEventListener("click", () => {
   var HasReading = IncludeReading.checked;
   var IELTSHasWritingPart1 = IELTSIncludeWritingPart1.checked;
   var IELTSHasWritingPart2 = IELTSIncludeWritingPart2.checked;
+  var TOEICHasWritingPart6 = TOEICIncludeWritingPart6.checked;
+  var TOEICHasWritingPart7 = TOEICIncludeWritingPart7.checked;
+  var TOEICHasWritingPart8 = TOEICIncludeWritingPart8.checked;
   Errors.innerHTML = "";
-  if (!( HasReading || IELTSHasWritingPart1 || IELTSHasWritingPart2)) {
+  if (!(HasReading 
+    || IELTSHasWritingPart1 
+    || IELTSHasWritingPart2 
+    || TOEICHasWritingPart6
+    || TOEICHasWritingPart7
+    || TOEICHasWritingPart8)) {
     Errors.innerHTML = "You must select at least one skill to practice!";
     return;
   }
 
-  console.log("===TEST DATA===");
-  console.log(`Type: ${TypeOfTest.toUpperCase()}`);
-  //console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
-  console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
-  console.log(`Include Writing: ${IELTSHasWritingPart1 ? "YES" : "NO"}`);
+  // console.log("===TEST DATA===");
+  // console.log(`Type: ${TypeOfTest.toUpperCase()}`);
+  // console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
+  // console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
+  // console.log(`Include Writing: ${IELTSHasWritingPart1 ? "YES" : "NO"}`);
+
   if (WhetherSlidersMatter) {
     console.log(
       `Current performance: ${
@@ -141,17 +152,15 @@ GenerateTest.addEventListener("click", () => {
   // right side of && evaluates (run) if left is true, otherwise it stops immediately
   // basically a 'shorthand if' if you will
   let parts = "";
-  /*if (HasListening) {
-	parts += "listening ";
-  }*/
-  if (HasReading) {
-	parts += "reading ";
-  }
-  if (IELTSHasWritingPart1) {
-	parts += "writing1 ";
-  }
-  if (IELTSHasWritingPart2) {
-	parts += "writing2 ";
+  
+  if (HasReading) parts += "reading ";
+  if (TypeOfTest != "toeic") {
+    if (IELTSHasWritingPart1)	parts += "writing1 ";
+    if (IELTSHasWritingPart2)	parts += "writing2 ";
+  } else {
+    if (TOEICHasWritingPart6) parts += "writing6 ";
+    if (TOEICHasWritingPart7) parts += "writing7 ";
+    if (TOEICHasWritingPart8) parts += "writing8 ";
   }
 
   params.append("include", parts.slice(0, -1));
@@ -260,3 +269,22 @@ document.getElementById("deleteall").addEventListener("click", () => {
   )
   
 });*/
+
+// run initially because
+if (document.getElementById("toeic").checked) {
+  document.getElementById("ielts_options").className = "hidden";
+  document.getElementById("toeic_options").className = "";
+} else {
+  document.getElementById("ielts_options").className = "";
+  document.getElementById("toeic_options").className = "hidden";
+}
+
+document.getElementById("test_format").addEventListener("change", () => {
+  if (document.getElementById("toeic").checked) {
+    document.getElementById("ielts_options").className = "hidden";
+    document.getElementById("toeic_options").className = "";
+  } else {
+    document.getElementById("ielts_options").className = "";
+    document.getElementById("toeic_options").className = "hidden";
+  }
+});
