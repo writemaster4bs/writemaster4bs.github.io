@@ -274,13 +274,17 @@ document.getElementById("deleteall").addEventListener("click", () => {
 });*/
 
 // run initially because
-if (document.getElementById("toeic").checked) {
-  document.getElementById("ielts_options").className = "hidden";
-  document.getElementById("toeic_options").className = "";
-} else {
-  document.getElementById("ielts_options").className = "";
-  document.getElementById("toeic_options").className = "hidden";
-}
+new Promise((resolve) =>
+  setTimeout(resolve, 50)
+).then(() => {
+  if (document.getElementById("toeic").checked) {
+    document.getElementById("ielts_options").className = "hidden";
+    document.getElementById("toeic_options").className = "";
+  } else {
+    document.getElementById("ielts_options").className = "";
+    document.getElementById("toeic_options").className = "hidden";
+  }
+});
 
 document.getElementById("test_format").addEventListener("change", () => {
   if (document.getElementById("toeic").checked) {

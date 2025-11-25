@@ -24,7 +24,7 @@
         const theme = stored ?? (prefersDark ? "dark" : "light");
         console.log(theme);
       
-        document.documentElement.classList.toggle("dark-mode");
+        document.documentElement.classList.toggle("dark-mode", theme === "dark");
         document.documentElement.classList.remove("unready");
       })();
     </script>
