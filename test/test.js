@@ -256,11 +256,17 @@ Requirements:
           match = [
             'stuff',
             'band',
-            69
+            6.21
           ]
           // funny haha number if no ai
+          // band 6.21 = 69/100
         }
-        e.score = parseInt(match[2]);
+        if (match[1] == "band") {
+          e.score = parseFloat(match[2]) / 9 * 100;
+        } else {
+          e.score = (parseInt(match[2]) - 10) / 980 * 100;
+          // TOEIC ranges from 10 to 990
+        }
         avgScore += e.score;
         count++;
         generated--;
@@ -272,12 +278,9 @@ Requirements:
             1
           )}<small>/100</small></code>, corresponding to a ${
             match[1] == "score" /* if it said score, thats TOEIC */
-              ? `score of <code>${Math.floor(avgScore * 10)}</code>`
-              : `band of <code>${(Math.floor(avgScore * 0.9) / 10).toFixed(
-                1
-              )
-            }</code>`
-          }`
+              ? "score"
+              : "band"
+          } of <code>${match[2]}`
           this.TestBox.appendChild(scoreElement);
         }
       });
