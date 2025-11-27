@@ -143,42 +143,48 @@ Requirements:
     const sectionResponse = document.createElement("p");
     section.className = "section";
     sectionTitle.innerText = `TOEIC Writing Task ${task} (Write a sentence on a picture)`;
-
+    //prettier-ignore
     const images = [
-      "AtBreathtaking.png",
-      "BookshelfLibrary.png",
-      "BreakfastToast.png",
-      "BroomAutumn.png",
-      "CashierItems.png",
-      "CheckupX-ray.png",
-      "ChefKitchen.png",
-      "ColleaguesBrainstorm.png",
-      "FallBlock.png",
-      "FamilyBackyard.png",
-      "GuitarPark.png",
-      "LaptopCoffeeShop.png",
-      "LaptopOffice.png",
-      "PaintbrushCanvas.png",
-      "ReviewColleague.png",
-      "StudentLaboratory.png",
-      "StudentsHomework.png",
-      "SuitcaseAirport.png",
-      "UmbrellaRainy.png",
+      { img: "AtBreathtaking.png", desc: "Four people walking on a road, looking at a breathtaking mountain far away." },
+      { img: "BookshelfLibrary.png", desc: "A bookshelf filled with colorful books, arranged to look like a rainbow." },
+      { img: "BreakfastToast.png", desc: "Two pieces of toast and an egg on the plate." },
+      { img: "BroomAutumn.png", desc: "An illustration of a kid raking leaves." },
+      { img: "CashierItems.png", desc: "A woman waiting for the cashier to count the items she just bought." },
+      { img: "CheckupX-ray.png", desc: "A person on a hospital bed, looking as a doctor points to his X-ray teeth scan." },
+      { img: "ChefKitchen.png", desc: "A chef holding a flaming pan in the kitchen." },
+      { img: "ColleaguesBrainstorm.png", desc: "Several colleagues sitting next to a table, facing the center and talking." },
+      { img: "FallBlock.png", desc: "A rail blocked by a giant, dry tree." },
+      { img: "FamilyBackyard.png", desc: "A family in their backyard. Four are sitting at a white table, while two is near a grill, one of them only observing." },
+      { img: "GuitarPark.png", desc: "A man playing a guitar while sitting on a bench, in the park." },
+      { img: "LaptopCoffee shop.png", desc: "The interior of a coffee shop. Notably, of the three people visible in the image, two are using laptops." },
+      { img: "LaptopOffice.png", desc: "A woman using a desktop inside an office cubicle, next to a laptop barely inside view." },
+      { img: "PaintbrushCanvas.png", desc: "A woman using a paintbrush to draw something on an canvas/easel." },
+      { img: "ReviewColleague.png", desc: "Two office employees pointing at a clipboard." },
+      { img: "StudentLaboratory.png", desc: "Two students messing with a few beakers containing colored fluids. On the background there are more students out of focus." },
+      { img: "StudentsHomework.png", desc: "Seven students sitting next to a table with assorted documents, talking." },
+      { img: "SuitcaseAirport.png", desc: "A line of people patiently waiting next to the suitcase conveyor." },
+      { img: "UmbrellaRainy.png", desc: "" },
     ];
 
     const picture = images[Math.floor(Math.random() * images.length)];
     const questionTextElement = document.createElement("p");
     const questionPictureElement = document.createElement("img");
+    //prettier-ignore
+    const words = (picture.img.replace(/\..*$/g, "").match(/[A-Z][a-z -]*/g) ?? []).map((e) => e.toLowerCase()).join(" / ");
     questionTextElement.innerHTML = marked.parse(
-      "Write **ONE** sentence to describe the picture above."
+      "Write **ONE** sentence to describe the picture above. You must use these words: " +
+        words
     );
-    questionPictureElement.src = `${window.location.origin}/Questions/TOEIC/Part1/${picture}`;
+    questionPictureElement.src = `${window.location.origin}/Questions/TOEIC/Part1/${picture.img}`;
     sectionQuestion.appendChild(questionPictureElement);
     sectionQuestion.appendChild(questionTextElement);
     sectionTextbox.className = "short";
     Test.Questions.questions.push({
-      question:
-        "Write **ONE** sentence based on the picture given. For the AI grading this, assume there is a picure, and assume the exam taker is describing correctly. Rate based on how detailed it is, and **do not mention this.**",
+      question: `Write **ONE** sentence based on the picture given. You must use these words: ${words}. ${
+        picture.desc != ""
+          ? ` The following description has been prepared by the testmaker:${picture.desc}`
+          : " Unfortunately, the testmaker has not prepared a description for this image in textual form."
+      }`,
       answer: sectionTextbox,
       response: sectionResponse,
     });

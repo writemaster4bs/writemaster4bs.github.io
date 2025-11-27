@@ -97,7 +97,7 @@ ${
 - Output the **complete** passage and question text, and nothing else.
 - If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.`
   ).then((response) => {
-    sectionQuestion.innerHTML = marked.parse(response);
+    sectionQuestion.innerHTML = marked.parse(response.replace("\n", "\n\n"));
     Test.Questions.questions.push({
       question: response,
       answer: sectionTextbox,
