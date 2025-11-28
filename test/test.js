@@ -10,6 +10,11 @@ if (
   enableAI = true;
 }
 
+/**
+ * Prompts the AI placed on the writemaster vercel api proxy, duh
+ * @param {string} prompt What do you think lol
+ * @returns Text from AI if successful
+ */
 export async function getAIResponse(prompt = "") {
   if (!enableAI) {
     await new Promise((resolve) =>
@@ -41,12 +46,20 @@ export async function getAIResponse(prompt = "") {
   return data.candidates[0].content.parts[0].text;
 }
 
+/**
+ * TIMER!!!!111!!
+ * manages timer part of the test
+ */
 export class Timer {
   static TimerElement = document.getElementById("timer");
   static intervalId;
   static timeGiven = 0;
   static timeLeft = 0;
 
+  /**
+   * *Sets* the timer, but *doesn't start* it
+   * @param {number} time In milliseconds 
+   */
   static set(time) {
     this.timeLeft = Date.now() + 1000 * time;
     this.update();
@@ -85,14 +98,27 @@ export class Timer {
   }
 }
 
+// I wish there was a private keyword in js and not just ts
+/**
+ * I handle questions
+ */
 export class Questions {
   static questions = [];
+
   static questionsLeftToGenerate = 0;
+  /**
+   * @private
+   */
   static checkGenerationFinished() {
     this.questionsLeftToGenerate--;
     this.questionsLeftToGenerate <= 0 && Test.ready();
   }
-
+  
+  /**
+   * Generates a writing question
+   * @param {string} name Name of the question (e.g. "Writing Part 1")
+   * @param {string} test Name of test
+   */
   static generateWriting(name, test) {
     this.questionsLeftToGenerate++;
     const section = document.createElement("div");
@@ -134,6 +160,12 @@ Requirements:
     document.getElementById("test").appendChild(section);
   }
 
+  /**
+   * The code is self documenting with how long the function name is
+   * @param {string | number} task The task (1–⁠5)
+   * @param {[number]?} excl Images to exclude
+   * @returns `excl` but with the image in the question added to it
+   */
   static generateTOEICWritingSection1(task, excl = []) {
     this.questionsLeftToGenerate++;
     const section = document.createElement("div");
@@ -208,15 +240,32 @@ Requirements:
     return excl.concat(p);
   }
 }
+
+/**
+ * Squishes `x` from a range of `m`–⁠`n` to a range of `p`–⁠`q`
+ * @param {number} x Number to squish
+ * @param {number} m Start of original range
+ * @param {number} n End of original range
+ * @param {number} p Start of new range
+ * @param {number} q End of new range
+ * @returns `x` but now all squished
+ */
 function squish(x, m, n, p, q) {
   return p + (q - p) * ((x - m) / (n - m));
 }
+
+/**
+ * now I am become tests, the destroyer of students
+ */
 export class Test {
   static ActionButton = document.getElementById("submit_btn");
   static TestBox = document.getElementById("test");
   static Timer = Timer;
   static Questions = Questions;
 
+  /**
+   * Makes it so users can start the test
+   */
   static ready() {
     try {
       document.getElementById("testrdy").remove();
@@ -239,7 +288,10 @@ export class Test {
       e.disabled = false;
     });
   }
-
+  
+  /**
+   * Submits the test and grades the questions
+   */
   static submit() {
     let avgScore = 0;
     let count = 0;
