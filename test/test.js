@@ -1,4 +1,4 @@
-let enableAI = false;
+let enableAI = true;
 if (
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
@@ -108,7 +108,7 @@ export class Questions {
       `Generate a ${test} ${name} question.
   
 Requirements:
-- Output **only** the question text and its required reading passage**. Do **not** include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
+- Output **only** the question text and its required reading passage. Do **not** include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
 - The response **must** begin with **only** the full reading passage (which means you musn't put the question/requirement here), followed by a markdown line break (three dashes, like this: \`---\`) padded with new lines both before and after, followed by the question.  
 - If the task involves data (charts, graphs, comparisons, processes, etc.), represent all data **only** using Markdown tables. Do not use images, ASCII, or non-table charts
 - The passage and questions must be fully self-contained and formatted exactly like a standard ${test} ${name} prompt.
@@ -121,6 +121,7 @@ Requirements:
         question: response,
         answer: sectionTextbox,
         response: sectionResponse,
+        type: (test == "TOEIC") ? "toeic" : "ielts"
       });
       this.checkGenerationFinished();
     });
@@ -189,6 +190,7 @@ Requirements:
       }`,
       answer: sectionTextbox,
       response: sectionResponse,
+      type: "toeic",
     });
 
     new Promise((resolve) =>
@@ -238,7 +240,7 @@ export class Test {
     });
   }
 
-  static submit(type) {
+  static submit() {
     let avgScore = 0;
     let count = 0;
     let generated = 0;
@@ -258,10 +260,10 @@ The question is:\n
 ${e.question}\n\n
 Requirements:
 - Evaluate the quality, clarity, correctness, and completeness of the answer.
-- Provide a brief constructive review.
+- Provide a decent-length constructive review, proposing fixes to spelling and grammar, and better vocab & sentence structure for flow. You can give a "rewritten" version of the test taker's answer, but **don't grade that.**
 - At the end, output exactly one integer score from 0 to 100 in the format "Your score: XX".
 - No other scoring formats or text after the score.
-- Be fair but not harsh.`).then((r) => {
+- Be fair but not harsh. Rate using the same criterion as actual ${e.type.toUpperCase()} test graders.`).then((r) => {
         e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
           r
         )}</div>`;
@@ -284,11 +286,11 @@ Requirements:
           scoreElement.innerHTML = `Your score is <code>${avgScore.toFixed(
             1
           )}<small>/100</small></code>, corresponding to a ${
-            type == "toeic" ? "score" : "band"
+            e.type == "toeic" ? "score" : "band"
           } of <code>${
-            type == "toeic"
-              ? squish(avgScore, 0, 100, 0, 1000).toFixed(0)
-              : squish(avgScore, 0, 100, 1, 9).toFixed(1)
+            e.type == "toeic"
+              ? squish(avgScore, 0, 100, 10, 990).toFixed(0)
+              : squish(avgScore, 0, 100, 0, 9).toFixed(1)
           }`;
           this.TestBox.appendChild(scoreElement);
         }
