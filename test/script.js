@@ -44,7 +44,7 @@ Test.ActionButton.addEventListener("click", () => {
     if (!window.confirm("Are you sure you want to submit?")) return;
     stage = 2;
     Test.Timer.update(); /* window.confirm() function blocks that from updating for some reason */
-    Test.submit();
+    Test.submit(testType);
   }
 });
 

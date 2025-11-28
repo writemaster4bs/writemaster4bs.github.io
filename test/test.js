@@ -206,7 +206,9 @@ Requirements:
     return excl.concat(p);
   }
 }
-
+function squish(x, m, n, p, q) {
+  return p + (q - p) * ((x - m) / (n - m));
+}
 export class Test {
   static ActionButton = document.getElementById("submit_btn");
   static TestBox = document.getElementById("test");
@@ -236,7 +238,7 @@ export class Test {
     });
   }
 
-  static submit() {
+  static submit(type) {
     let avgScore = 0;
     let count = 0;
     let generated = 0;
@@ -257,26 +259,21 @@ ${e.question}\n\n
 Requirements:
 - Evaluate the quality, clarity, correctness, and completeness of the answer.
 - Provide a brief constructive review.
-- At the end, output exactly one integer score from 0 to 100 in the format: "Your band: X.X" for IELTS, OR "Your score: XXX" for TOEIC.
+- At the end, output exactly one integer score from 0 to 100 in the format "Your score: XX".
 - No other scoring formats or text after the score.
 - Be fair but not harsh.`).then((r) => {
         e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
           r
         )}</div>`;
 
-        let match = r.match(/Your (band|score):\s*(\d+|\d\.\d)/i);
         if (!enableAI) {
-          // fake data!1111!!!!!!!11!1!
-          match = ["stuff", "band", 6.21];
-          // funny haha number if no ai
-          // band 6.21 = 69/100
-        }
-        if (match[1] == "band") {
-          e.score = (parseFloat(match[2]) / 9) * 100;
+          e.score = +prompt("test!").match(
+            /Your\s\s?score:\s*((?:\d|[.,]\d)+)/i
+          )[1];
         } else {
-          e.score = ((parseInt(match[2]) - 10) / 980) * 100;
-          // TOEIC ranges from 10 to 990
+          e.score = +r.match(/Your\s\s?score:\s*((?:\d|[.,]\d)+)/i)[1];
         }
+
         avgScore += e.score;
         count++;
         generated--;
@@ -287,10 +284,12 @@ Requirements:
           scoreElement.innerHTML = `Your score is <code>${avgScore.toFixed(
             1
           )}<small>/100</small></code>, corresponding to a ${
-            match[1] == "score" /* if it said score, thats TOEIC */
-              ? "score"
-              : "band"
-          } of <code>${match[2]}`;
+            type == "toeic" ? "score" : "band"
+          } of <code>${
+            type == "toeic"
+              ? squish(avgScore, 0, 100, 0, 1000).toFixed(0)
+              : squish(avgScore, 0, 100, 1, 9).toFixed(1)
+          }`;
           this.TestBox.appendChild(scoreElement);
         }
       });
