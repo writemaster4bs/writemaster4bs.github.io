@@ -208,14 +208,14 @@ function UpdateDarkMode() {
   var selected = document.querySelector('input[name="theme"]:checked').id;
   selected = selected ?? "light";
   if (selected == "dark") {
-    document.body.className = "dark-mode";
+    document.documentElement.className = "dark-mode";
   } else if (selected == "light") {
-    document.body.className = "";
+    document.documentElement.className = "";
   } else {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.body.className = "dark-mode";
+      document.documentElement.className = "dark-mode";
     } else {
-      document.body.className = "";
+      document.documentElement.className = "";
     }
   }
   localStorage.setItem("theme", selected);
