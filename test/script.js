@@ -130,13 +130,20 @@ if (testType != "toeic") {
       7,
       "all questions use the same text: seven items (suitcases/classes/websites/...) of a list (A–G), and that the answerer should select which item each statement refers to. Maintain single-context integrity"
     );
-    Generate(
-      "Reading Tasks [SECTION 1]",
-      true,
+    // Generate(
+    //   "Reading Tasks [SECTION 1]",
+    //   true,
+    //   8,
+    //   14,
+    //   "all questions use the same text, and that the answerer should determine whether statements agree with the information. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
+    // );
+    Test.Questions.generateIELTSReading(
+      "Reading Tasks [Section 1]", 
+      translationKeys[testType],
       8,
       14,
-      "all questions use the same text, and that the answerer should determine whether statements agree with the information. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
-    );
+      {"true_false_not_given": 7}
+    )
     Generate(
       "Reading Tasks [SECTION 2]",
       true,
@@ -144,13 +151,20 @@ if (testType != "toeic") {
       20,
       "all questions use the same text, and that the answerer should provide responses according to the passage. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
     );
-    Generate(
-      "Reading Tasks [SECTION 2]",
-      true,
+    // Generate(
+    //   "Reading Tasks [SECTION 2]",
+    //   true,
+    //   21,
+    //   27,
+    //   "all questions use the same text, and that the answerer should complete the notes using ONE WORD ONLY from the passage. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
+    // );
+    Test.Questions.generateIELTSReading(
+      "Reading Tasks [Section 2]",
+      translationKeys[testType],
       21,
       27,
-      "all questions use the same text, and that the answerer should complete the notes using ONE WORD ONLY from the passage. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
-    );
+      {"sentence_completion": 7}
+    )
     Generate(
       "Reading Tasks [SECTION 3]",
       true,

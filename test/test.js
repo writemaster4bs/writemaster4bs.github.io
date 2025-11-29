@@ -274,7 +274,7 @@ Requirements:
       "matching_headings": "Match headings (not statements) to paragraphs. **Required format:** \`{Question number}. {Question}. \` Mark each paragraph with a lowercase roman numberal (e.g. i, ii, vi, ...) when generating them.",
       "matching_features": "Match features (not headings or statements) to statements/attributes. **Required format:** \`Given these statements: \n{Capital letter for each statement}. {Statement}.\` \`{Question number}. {Feature}.\`",
       "summary_completion": "Complete a given summary using words from the passage. **Give a summary of the passage with some keywords replaced with this required format:** \`[...] {Question number}. ________ [...]\` Remember, 8 exact underscores.",
-      "sentence_completion": "Complete a given sentence using words from the passage. **Give a sentence related to the passage in this *required format:* \`{Question number}. {Sentence}\` with some keywords replaced with this:** \`________\` Remember, 8 exact underscores. **ONE blank per question, and each blank can have <= 3 words.**",
+      "sentence_completion": "Complete a given sentence using words from the passage. **Give a sentence (note) related to the passage in this *required format:* \`{Question number}. {Sentence}\` with some keywords replaced with this:** \`________\` Remember, 8 exact underscores. **ONE blank per question, and each blank can have <= 3 words.**",
       "multiple_choice": "Multiple choice question. **Required format:** \`{Question number}. {Question}?\` \`[A, B, C or D]. [Choice].\`",
       "short_answer": "Answer questions using NO MORE THAN THREE WORDS using words from the passage. **Required format: \`{Question number}. {Question}? \`**"
     }
@@ -288,7 +288,7 @@ Requirements:
 - Produce **only** reading questions numbered from ${from} to ${to}. Do **not** generate any questions outside this range.
 - The question types and amount are: ${
   Object.entries(type).map(([ques, amount]) => `${amount} ${questionTypes[ques]}`).join(' ')
-}. Remember to say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements" (word it like in an actual test).
+}. Remember to say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements" (word it like in an actual test). Please, those brackets in the format are not to be put onto the tests. They're like javascript \${} interpolation.
 - The passage must be original, complete, and fully self-contained.
 - Do not summarize, shorten, merge, or omit any parts of the selected questions.
 - Ensure every selected question and every answer option (if any) appears in full.
@@ -306,7 +306,7 @@ Requirements:
         
         if (questionType == "true_false_not_given") {
           sectionAnswer.appendChild(document.createElement("hr"));
-          const questions = [...parts[i].matchAll(/\d\. .+\n/ig)];
+          const questions = [...parts[i].matchAll(/\d+\. .+\n/ig)];
           const questionReq = document.createElement("p");
           questionReq.innerHTML = "<br>Pick TRUE, FALSE or NOT GIVEN for each of the following statements.";
           sectionAnswer.appendChild(questionReq);
@@ -327,7 +327,7 @@ Requirements:
 
         if (questionType == "sentence_completion") {
           sectionAnswer.appendChild(document.createElement("hr"));
-          const questions = [...parts[i].matchAll(/\d\. .+\n/ig)];
+          const questions = [...parts[i].matchAll(/\d+\. .+\n/ig)];
           const questionReq = document.createElement("p");
           questionReq.innerHTML = "<br>Fill in the blanks using words from the passage using NO MORE THAN THREE WORDS.";
           sectionAnswer.appendChild(questionReq);
