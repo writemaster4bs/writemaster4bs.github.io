@@ -11,9 +11,11 @@ if (
 }
 
 /**
- * Prompts the AI placed on the writemaster vercel api proxy, duh
- * @param {string} prompt What do you think lol
- * @returns Text from AI if successful
+ * Prompts the AI placed on the Writemaster™'s official Vercel™ API.
+ * @param {string} prompt The prompt inputted to the AI.
+ * @returns {Promise} Text from AI if successful. Note that .then() must be used as this is an asynchronous function.
+ * @author hpol™ and Stonkalyasatone™
+ *
  */
 export async function getAIResponse(prompt = "") {
   if (!enableAI) {
@@ -58,8 +60,9 @@ export class Timer {
 
   /**
    * *Sets* the timer, but *doesn't start* it
-   * @param {number} time In milliseconds 
+   * @param {number} time In milliseconds
    */
+
   static set(time) {
     this.timeLeft = Date.now() + 1000 * time;
     this.update();
@@ -113,7 +116,7 @@ export class Questions {
     this.questionsLeftToGenerate--;
     this.questionsLeftToGenerate <= 0 && Test.ready();
   }
-  
+
   /**
    * Generates a writing question
    * @param {string} name Name of the question (e.g. "Writing Part 1")
@@ -147,7 +150,7 @@ Requirements:
         question: response,
         answer: sectionTextbox,
         response: sectionResponse,
-        type: (test == "TOEIC") ? "toeic" : "ielts"
+        type: test == "TOEIC" ? "toeic" : "ielts",
       });
       this.checkGenerationFinished();
     });
@@ -242,13 +245,14 @@ Requirements:
 }
 
 /**
- * Squishes `x` from a range of `m`–⁠`n` to a range of `p`–⁠`q`
- * @param {number} x Number to squish
- * @param {number} m Start of original range
- * @param {number} n End of original range
- * @param {number} p Start of new range
- * @param {number} q End of new range
- * @returns `x` but now all squished
+Performs a forward- and reverse- linear interpolation on the number x.
+@param {number} x The value to be processed
+@param {number} m The start of the 1st interpolation range
+@param {number} n The end of the 1st interpolation range
+@param {number} p The start of the 2st interpolation range
+@param {number} q The end of the 2st interpolation range
+@returns A number y=lerp(k,p,q), where k is a number statisfying lerp(k,m,n)=x and lerp(x,y,z)=xz+(1-x)y.
+@author Stonkalyasatone
  */
 function squish(x, m, n, p, q) {
   return p + (q - p) * ((x - m) / (n - m));
@@ -288,7 +292,7 @@ export class Test {
       e.disabled = false;
     });
   }
-  
+
   /**
    * Submits the test and grades the questions
    */
@@ -315,38 +319,40 @@ Requirements:
 - Provide a decent-length constructive review, proposing fixes to spelling and grammar, and better vocab & sentence structure for flow. You can give a "rewritten" version of the test taker's answer, but **don't grade that.**
 - At the end, output exactly one integer score from 0 to 100 in the format "Your score: XX".
 - No other scoring formats or text after the score.
-- Be fair but not harsh. Rate using the same criterion as actual ${e.type.toUpperCase()} test graders.`).then((r) => {
-        e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
-          r
-        )}</div>`;
+- Be fair but not harsh. Rate using the same criterion as actual ${e.type.toUpperCase()} test graders.`).then(
+        (r) => {
+          e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
+            r
+          )}</div>`;
 
-        if (!enableAI) {
-          e.score = +prompt("test!").match(
-            /Your\s\s?score:\s*((?:\d|[.,]\d)+)/i
-          )[1];
-        } else {
-          e.score = +r.match(/Your\s\s?score:\s*((?:\d|[.,]\d)+)/i)[1];
+          if (!enableAI) {
+            e.score = +prompt("test!").match(
+              /Your\s\s?score:\s*((?:\d|[.,]\d)+)/i
+            )[1];
+          } else {
+            e.score = +r.match(/Your\s\s?score:\s*((?:\d|[.,]\d)+)/i)[1];
+          }
+
+          avgScore += e.score;
+          count++;
+          generated--;
+
+          if (generated == 0) {
+            avgScore /= count;
+            let scoreElement = document.createElement("h1");
+            scoreElement.innerHTML = `Your score is <code>${avgScore.toFixed(
+              1
+            )}<small>/100</small></code>, corresponding to a ${
+              e.type == "toeic" ? "score" : "band"
+            } of <code>${
+              e.type == "toeic"
+                ? squish(avgScore, 0, 100, 10, 990).toFixed(0)
+                : squish(avgScore, 0, 100, 0, 9).toFixed(1)
+            }`;
+            this.TestBox.appendChild(scoreElement);
+          }
         }
-
-        avgScore += e.score;
-        count++;
-        generated--;
-
-        if (generated == 0) {
-          avgScore /= count;
-          let scoreElement = document.createElement("h1");
-          scoreElement.innerHTML = `Your score is <code>${avgScore.toFixed(
-            1
-          )}<small>/100</small></code>, corresponding to a ${
-            e.type == "toeic" ? "score" : "band"
-          } of <code>${
-            e.type == "toeic"
-              ? squish(avgScore, 0, 100, 10, 990).toFixed(0)
-              : squish(avgScore, 0, 100, 0, 9).toFixed(1)
-          }`;
-          this.TestBox.appendChild(scoreElement);
-        }
-      });
+      );
     });
   }
 }

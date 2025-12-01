@@ -28,13 +28,18 @@
       }
     </style>
     <script>
-      (function() {
+      (function () {
         const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
         const theme = stored ?? (prefersDark ? "dark" : "light");
         console.log(theme);
-      
-        document.documentElement.classList.toggle("dark-mode", theme === "dark");
+
+        document.documentElement.classList.toggle(
+          "dark-mode",
+          theme === "dark"
+        );
         document.documentElement.classList.remove("unready");
       })();
     </script>
