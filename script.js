@@ -93,7 +93,9 @@ let IELTSIncludeWritingPart2 = document.getElementById("include_writing2");
 let TOEICIncludeWritingPart6 = document.getElementById("include_writing6");
 let TOEICIncludeWritingPart7 = document.getElementById("include_writing7");
 let TOEICIncludeWritingPart8 = document.getElementById("include_writing8");
-let TOEICIncludeWritingParts1to5 = document.getElementById("include_writing1to5");
+let TOEICIncludeWritingParts1to5 = document.getElementById(
+  "include_writing1to5"
+);
 
 GenerateTest.addEventListener("click", () => {
   /*var selected = document.querySelector('input[name="test_format"]:checked');
@@ -118,13 +120,17 @@ GenerateTest.addEventListener("click", () => {
   var TOEICHasWritingPart8 = TOEICIncludeWritingPart8.checked;
   var TOEICHasWritingParts1to5 = TOEICIncludeWritingParts1to5.checked;
   Errors.innerHTML = "";
-  if (!(HasReading 
-    || IELTSHasWritingPart1 
-    || IELTSHasWritingPart2 
-    || TOEICHasWritingPart6
-    || TOEICHasWritingPart7
-    || TOEICHasWritingPart8
-    || TOEICHasWritingParts1to5)) {
+  if (
+    !(
+      HasReading ||
+      IELTSHasWritingPart1 ||
+      IELTSHasWritingPart2 ||
+      TOEICHasWritingPart6 ||
+      TOEICHasWritingPart7 ||
+      TOEICHasWritingPart8 ||
+      TOEICHasWritingParts1to5
+    )
+  ) {
     Errors.innerHTML = "You must select at least one skill to practice!";
     return;
   }
@@ -155,11 +161,11 @@ GenerateTest.addEventListener("click", () => {
   // right side of && evaluates (run) if left is true, otherwise it stops immediately
   // basically a 'shorthand if' if you will
   let parts = "";
-  
+
   if (HasReading) parts += "reading ";
   if (TypeOfTest != "toeic") {
-    if (IELTSHasWritingPart1)	parts += "writing1 ";
-    if (IELTSHasWritingPart2)	parts += "writing2 ";
+    if (IELTSHasWritingPart1) parts += "writing1 ";
+    if (IELTSHasWritingPart2) parts += "writing2 ";
   } else {
     if (TOEICHasWritingPart6) parts += "writing6 ";
     if (TOEICHasWritingPart7) parts += "writing7 ";
@@ -168,7 +174,7 @@ GenerateTest.addEventListener("click", () => {
   }
 
   params.append("include", parts.slice(0, -1));
-  console.log('help')
+  console.log("help");
   console.log(parts);
   // Who in their right mind thinks of short-circuit evaluation?
   // oh stack overflow users do
@@ -274,9 +280,7 @@ document.getElementById("deleteall").addEventListener("click", () => {
 });*/
 
 // run initially because
-new Promise((resolve) =>
-  setTimeout(resolve, 50)
-).then(() => {
+new Promise((resolve) => setTimeout(resolve, 50)).then(() => {
   if (document.getElementById("toeic").checked) {
     document.getElementById("ielts_options").className = "hidden";
     document.getElementById("toeic_options").className = "";
