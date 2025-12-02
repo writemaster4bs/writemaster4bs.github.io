@@ -130,20 +130,13 @@ if (testType != "toeic") {
       7,
       "all questions use the same text: seven items (suitcases/classes/websites/...) of a list (A–G), and that the answerer should select which item each statement refers to. Maintain single-context integrity"
     );
-    // Generate(
-    //   "Reading Tasks [SECTION 1]",
-    //   true,
-    //   8,
-    //   14,
-    //   "all questions use the same text, and that the answerer should determine whether statements agree with the information. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
-    // );
-    Test.Questions.generateIELTSReading(
-      "Reading Tasks [Section 1]", 
-      translationKeys[testType],
+    Generate(
+      "Reading Tasks [SECTION 1]",
+      true,
       8,
       14,
-      {"true_false_not_given": 7}
-    )
+      "all questions use the same text, and that the answerer should determine whether statements agree with the information. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
+    );
     Generate(
       "Reading Tasks [SECTION 2]",
       true,
@@ -151,20 +144,13 @@ if (testType != "toeic") {
       20,
       "all questions use the same text, and that the answerer should provide responses according to the passage. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
     );
-    // Generate(
-    //   "Reading Tasks [SECTION 2]",
-    //   true,
-    //   21,
-    //   27,
-    //   "all questions use the same text, and that the answerer should complete the notes using ONE WORD ONLY from the passage. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
-    // );
-    Test.Questions.generateIELTSReading(
-      "Reading Tasks [Section 2]",
-      translationKeys[testType],
+    Generate(
+      "Reading Tasks [SECTION 2]",
+      true,
       21,
       27,
-      {"sentence_completion": 7}
-    )
+      "all questions use the same text, and that the answerer should complete the notes using ONE WORD ONLY from the passage. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
+    );
     Generate(
       "Reading Tasks [SECTION 3]",
       true,
@@ -180,17 +166,11 @@ if (testType != "toeic") {
     Test.Questions.generateWriting("Writing Task 1", translationKeys[testType]);
     time += 20 * 60; // 20 minutes
   }
-  
+
   if (testIncludes.includes("writing2")) {
     Test.Questions.generateWriting("Writing Task 2", translationKeys[testType]);
     time += 40 * 60; // 40 minutes
   }
-  
-  if (testIncludes.includes("test")) {
-    Test.Questions.generateIELTSReading("Reading Section 1 [Passage 1]", translationKeys[testType], 1, 5, {"true_false_not_given": 3, "sentence_completion": 2});
-    time += 60 * 60;
-  }
-
   Test.Timer.set(time);
 } else {
   // TOEIC test generation logic
