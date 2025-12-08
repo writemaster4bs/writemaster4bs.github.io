@@ -45,7 +45,7 @@ export async function getAIResponse(prompt = "") {
 
   const data = await response.json();
   console.log(data);
-  return data.candidates[0].content.parts[0].text;
+  return data.choices[0].message.content.replaceAll(/`+/gi, "");
 }
 
 /**
@@ -319,7 +319,7 @@ Requirements:
 - Provide a decent-length constructive review, proposing fixes to spelling and grammar, and better vocab & sentence structure for flow. You can give a "rewritten" version of the test taker's answer, but **don't grade that.**
 - At the end, output exactly one integer score from 0 to 100 in the format "Your score: XX".
 - No other scoring formats or text after the score.
-- Be fair but not harsh. Rate using the same criterion as actual ${e.type.toUpperCase()} test graders.`).then(
+- Be fair but not harsh. Rate using the same criterion as actual ${e.type.toUpperCase()} test graders, and give points based on each of those criterion at the start.`).then(
         (r) => {
           e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
             r
