@@ -13,7 +13,10 @@
   grid-area: test;
   overflow-y: scroll;
 }
-
+canvas{
+  max-width: 400px;
+  max-height: 400px;
+}
 .test h1,
 .section {
   margin: 1rem;

@@ -36,8 +36,8 @@ function AddNewData(what) {
   updateChartData(data);
 }
 var UI = document.getElementById("user_interface");
-function generateChartFromMarkdownTable(header,body){
-  return header /*temporary*/
+/*function generateChartFromMarkdownTable(header,body){
+  return header /*temporary
 }
 const renderer = {
   table(header, body) {
@@ -45,7 +45,7 @@ const renderer = {
   }
 };
 
-marked.use({ renderer });
+marked.use({ renderer });*/
 function Scrollto(where) {
   let topOffset = where.offsetTop;
   UI.scrollTo({

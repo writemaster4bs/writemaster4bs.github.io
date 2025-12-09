@@ -1,3 +1,16 @@
+Chart.defaults.elements.line.tension = 0.25;
+const stored = localStorage.getItem("theme");
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+const theme = stored ?? (prefersDark ? "dark" : "light");
+console.log(theme);
+if (theme == "light") {
+  Chart.defaults.backgroundColor = "#000000";
+  Chart.defaults.borderColor = "#000000";
+} else {
+  Chart.defaults.backgroundColor = "#ffffff";
+  Chart.defaults.borderColor = "#ffffff";
+}
+
 let enableAI = true;
 if (
   window.location.hostname === "localhost" ||
@@ -9,6 +22,141 @@ if (
   console.log("Running on prod");
   enableAI = true;
 }
+/*function parseTable(e) {
+  //console.log(header);
+  //console.log(body);
+
+  let header = e.header;
+
+  let body = e.rows;
+  header = header.map((e) => e.text);
+  let type = "number";
+  body = body.map((m) => {
+    return m.map((n) => {
+      if (isNaN(+n.text)) {
+        type = "string";
+      }
+      return n.text;
+    });
+  });
+  let WillChart = false;
+  if (type == "number") {
+    body = body.map((m) => {
+      return m.map((n) => +n);
+    });
+    WillChart = Math.random() >= 0.4;
+  }
+  return { h: header, b: body, c: WillChart };
+}*/
+function parseTable(e) {
+  /*GPT-4: Do you trust me?
+  Me, Stonkalyasatone: With every cell of my body.
+   */
+  let header = e.header.map((h) => h.text);
+  let body = e.rows.map((r) => r.map((c) => c.text));
+
+  let sidewaysHeaders = [];
+  let maybeSideways = true;
+
+  // Detect if we likely have sideways headers
+  for (let row of body) {
+    if (row.length > 1) {
+      // If first cell is NOT numeric but the rest ARE numeric → sideways header detected
+      const firstIsString = isNaN(+row[0]);
+      const restAreNumbers = row.slice(1).every((v) => !isNaN(+v));
+
+      if (firstIsString && restAreNumbers) {
+        sidewaysHeaders.push(row[0]);
+      } else {
+        maybeSideways = false;
+        break;
+      }
+    }
+  }
+
+  // If sideways headers confirmed (every row matched), remove them
+  if (maybeSideways && sidewaysHeaders.length === body.length) {
+    header = header.slice(1); // remove the first column header name
+    body = body.map((row) => row.slice(1)); // remove each row’s first cell
+  } else {
+    sidewaysHeaders = []; // not consistent, discard
+  }
+
+  let type = "number";
+  for (let row of body) for (let cell of row) if (isNaN(+cell)) type = "string";
+
+  let WillChart = false;
+
+  if (type === "number") {
+    body = body.map((row) => row.map((num) => +num));
+    WillChart = Math.random() >= 0.4;
+  }
+  if (sidewaysHeaders.length == 0) {
+    //dummy values
+    sidewaysHeaders = body.map((e, i) => `Series ${i + 1}`);
+  }
+  return {
+    h: header,
+    b: body,
+    c: WillChart,
+    sideways: sidewaysHeaders.length ? sidewaysHeaders : null, // add returned series names
+  };
+}
+
+function regularTable(d) {
+  let table = `<thead><tr>${d.h
+    .map((e) => {
+      return `<th>${e}</th>`;
+    })
+    .join("")}</tr></thead>`;
+  table += `<tbody>${d.b
+    .map((r) => {
+      return `<tr>${r
+        .map((c) => {
+          return `<td>${c}</td>`;
+        })
+        .join(``)}</tr>`;
+    })
+    .join("")}</tbody>`;
+  return table;
+}
+let gni = 0;
+function getNewID() {
+  gni++;
+  return `dont_collide_with_me_${gni}`;
+}
+function generateChartFromMarkdownTable(e) {
+  let d = parseTable(e);
+  if (!d.c) {
+    console.log(regularTable(d));
+    return `<table>${regularTable(d)}</table>`;
+  }
+  let cid = getNewID();
+
+  setTimeout(() => {
+    new Chart(document.getElementById(cid), {
+      type: Math.random() >= 0.8 ? "line" : "bar",
+      data: {
+        labels: d.h,
+        datasets: d.b.map((row, i) => ({
+          label: d.sideways[i],
+          data: row,
+        })),
+      },
+    });
+  }, 100); /*wait a lil bit */
+  return `<canvas id="${cid}"></canvas>`;
+}
+let renderer = new marked.Renderer();
+renderer.table = generateChartFromMarkdownTable;
+marked.setOptions({
+  renderer,
+  breaks: true,
+  gfm: true,
+  headerIds: false,
+  mangle: false,
+});
+marked.use({ renderer, sanitize: false });
 
 /**
  * Prompts the AI placed on the Writemaster™'s official Vercel™ API.
@@ -23,10 +171,10 @@ export async function getAIResponse(prompt = "") {
       setTimeout(resolve, 2000 + Math.random() * 1000)
     );
     return `This is a response to the question "${prompt}"\n Also, here's a table:
-    |ba|sau|bay|
-    |--|---|---|
-    |1|2|3|
-    |4|5|6|`;
+    |h0|ba|sau|bay|
+    |---|---|---|---|
+    |a|3|1|4|
+    |b|1|5|4|`;
     //return prompt;
   }
   const response = await fetch(
