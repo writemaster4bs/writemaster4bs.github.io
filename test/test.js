@@ -22,7 +22,11 @@ export async function getAIResponse(prompt = "") {
     await new Promise((resolve) =>
       setTimeout(resolve, 2000 + Math.random() * 1000)
     );
-    return `This is a response to the question "${prompt}"`;
+    return `This is a response to the question "${prompt}"\n Also, here's a table:
+    |ba|sau|bay|
+    |--|---|---|
+    |1|2|3|
+    |4|5|6|`;
     //return prompt;
   }
   const response = await fetch(

@@ -120,7 +120,7 @@ textarea.big {
 }
 .selector {
   background-color: var(--accent-color) !important;
-  color: whitesmoke;
+  color: #fff;
   margin: 5px;
   padding: 3px;
   border-radius: 6px;
@@ -174,7 +174,7 @@ img {
 }
 /* Table header styling */
 th {
-  background-color: #f4f4f4; /* Light gray header background */
+  background-color: var(--table-aux-color); /* Light gray header background */
   font-weight: bold;
 }
 .selector,
@@ -186,7 +186,7 @@ br {
 
 /* Add alternating row colors for better readability */
 tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: var(--table-aux-color);
 }
 #submit-btn {
   display: flex;
@@ -376,7 +376,7 @@ header {
   --accent-color: #0090ff;
   --accent-color-button-pressed: #006dc1;
   --background-color: #333;
-  --foreground-color: white;
+  --foreground-color: #fff;
   --box-border-color: #333;
   --real-background-color: #000;
   --color-interface-base: rgba(255, 255, 255, 0.2);
@@ -395,10 +395,10 @@ body {
   --accent-color-hover: #88cbff;
   --accent-color: #0090ff;
   --accent-color-button-pressed: #006dc1;
-  --background-color: white;
-  --foreground-color: black;
-  --box-border-color: white;
-  --real-background-color: white;
+  --background-color: #fff;
+  --foreground-color: #000;
+  --box-border-color: #fff;
+  --real-background-color: #fff;
   --color-interface-base: rgba(0, 0, 0, 0.2);
   scrollbar-color: var(--accent-color) var(--background-color);
 }*/
@@ -406,10 +406,11 @@ body {
   --accent-color-hover: #88cbff;
   --accent-color: #0090ff;
   --accent-color-button-pressed: #006dc1;
-  --background-color: white;
-  --foreground-color: black;
-  --box-border-color: white;
-  --real-background-color: white;
+  --background-color: #fff;
+  --foreground-color: #000;
+  --box-border-color: #fff;
+  --table-aux-color: #f0f0f0;
+  --real-background-color: #fff;
   --color-interface-base: rgba(0, 0, 0, 0.2);
   --dm-bg-spacing: 2%;
   scrollbar-color: var(--accent-color) var(--background-color);
@@ -431,9 +432,10 @@ body.dark-mode {
   --accent-color: #0090ff;
   --accent-color-button-pressed: #006dc1;
   --background-color: #333;
-  --foreground-color: white;
+  --foreground-color: #fff;
   --box-border-color: var(--background-color);
-  --real-background-color: black;
+  --table-aux-color: #444;
+  --real-background-color: #000;
   --color-interface-base: rgba(255, 255, 255, 0.2);
   scrollbar-color: var(--accent-color) var(--background-color);
 }
@@ -446,16 +448,16 @@ body.dark-mode {
 
 .option:hover {
   background-color: var(--accent-color-hover);
-  /*color:white;*/
+  /*color:#fff;*/
   cursor: pointer;
 }
 .selected.option {
   background-color: var(--accent-color);
-  color: white;
+  color: #fff;
 }
 .selected.option:hover {
   background-color: var(--accent-color-button-pressed);
-  color: white;
+  color: #fff;
 }
 .user_interface {
   grid-area: user_interface;
@@ -496,7 +498,7 @@ select {
 }
 option:hover {
   background-color: var(--accent-color);
-  color: white;
+  color: #fff;
 }
 
 .sb_inner {
@@ -511,7 +513,7 @@ option:hover {
 .sb input:checked + .sb_inner {
   background-color: var(--accent-color);
   border: 1px solid var(--accent-color);
-  color: white;
+  color: #fff;
 }
 .center {
   display: flex;
@@ -555,7 +557,7 @@ option:hover {
   width: 18px;
   left: 2px;
   bottom: 2px;
-  background-color: white;
+  background-color: #fff;
   transition: 200ms;
   border-radius: 50%;
 }
