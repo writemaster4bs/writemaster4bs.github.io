@@ -333,7 +333,7 @@ Requirements:
 
         if (questionType == "sentence_completion") {
           sectionAnswer.appendChild(document.createElement("hr"));
-          const questions = [...parts[i].matchAll(/\d+\. .+\n/ig)];
+          const questions = [...parts[i].matchAll(/\[?\d+\]?\.? .+\n/ig)];
           const questionReq = document.createElement("p");
           questionReq.innerHTML = "<br>Fill in the blanks using words from the passage using NO MORE THAN THREE WORDS.";
           questionReq.id = "question";
