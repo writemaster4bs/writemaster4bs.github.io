@@ -291,7 +291,7 @@ Requirements:
 - Produce **only** reading questions numbered from ${from} to ${to}. Do **not** generate any questions outside this range.
 - The question types and amount are: ${
   Object.entries(type).map(([ques, amount]) => `${amount} ${questionTypes[ques]}`).join(' ')
-}. Remember to say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements" (word it like in an actual test). Please, those brackets in the format are not to be put onto the tests. They're like javascript \${} interpolation.
+}. Remember to *NOT* say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements" (word it like in an actual test). Please, those brackets in the format are not to be put onto the tests. They're like javascript \${} interpolation.
 - The passage must be original, complete, and fully self-contained.
 - Do not summarize, shorten, merge, or omit any parts of the selected questions.
 - Ensure every selected question and every answer option (if any) appears in full.
@@ -302,16 +302,19 @@ Requirements:
 - If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.
 - ***Note:*** Follow exactly, do not add stuff we did not ask. Treat this like you're generating for a regex algorithm to scan; if you use the wrong format, it doesn't work.`
     ).then((response) => {
-      const parts = response.replace("\n", "\n\n").split("---").concat("\n");
+      const parts = response.replace("\n", "\n\n").split("---");
+      parts[parts.length - 1] += "\n"; // IMPORTANT: Do not remove. This is not purely decorative.
+      console.log(parts);
       let i = 1;
-      Object.entries(type).forEach(([questionType, amount]) => {
-        sectionQuestion.innerHTML = marked.parse(parts[0].concat("\n"));
+      Object.entries(type).forEach(([questionType, _]) => {
+        sectionQuestion.innerHTML = marked.parse(parts[0] + "\n\n");
         
         if (questionType == "true_false_not_given") {
           sectionAnswer.appendChild(document.createElement("hr"));
           const questions = [...parts[i].matchAll(/\d+\. .+\n/ig)];
           const questionReq = document.createElement("p");
           questionReq.innerHTML = "<br>Pick TRUE, FALSE or NOT GIVEN for each of the following statements.";
+          questionReq.id = "question";
           sectionAnswer.appendChild(questionReq);
 
           let j = 0
@@ -333,6 +336,7 @@ Requirements:
           const questions = [...parts[i].matchAll(/\d+\. .+\n/ig)];
           const questionReq = document.createElement("p");
           questionReq.innerHTML = "<br>Fill in the blanks using words from the passage using NO MORE THAN THREE WORDS.";
+          questionReq.id = "question";
           sectionAnswer.appendChild(questionReq);
 
           let j = 0
@@ -351,7 +355,9 @@ Requirements:
           answer: sectionAnswer,
           response: sectionResponse,
           type: (test == "TOEIC") ? "toeic" : "ielts",
-          skill: "writing"
+          ieltsType: (test == "Academic IELTS") ? "ielts_acad" : "ielts_gen",
+          skill: "reading",
+          readingQuestionType: questionType
         });
 
         i++;
@@ -379,6 +385,48 @@ Performs a forward- and reverse- linear interpolation on the number x.
  */
 function squish(x, m, n, p, q) {
   return p + (q - p) * ((x - m) / (n - m));
+}
+
+/**
+ * Converts from total questions correct to band
+ * @param {number} correct Total questions correct
+ * @param {"ielts_gen" | "ielts_acad"} type Type of test
+ * @returns Estimated band
+ */
+function IELTSReadingToBand(correct, type) {
+  if (type == "ielts_gen") {
+    if (correct >= 39) return 9;
+    else if (correct >= 37) return 8.5;
+    else if (correct >= 36) return 8;
+    else if (correct >= 34) return 7.5;
+    else if (correct >= 32) return 7;
+    else if (correct >= 30) return 6.5;
+    else if (correct >= 27) return 6;
+    else if (correct >= 23) return 5.5;
+    else if (correct >= 19) return 5;
+    else if (correct >= 15) return 4.5;
+    else if (correct >= 12) return 4;
+    else if (correct >= 9) return 3.5;
+    else if (correct >= 6) return 3;
+    else if (correct >= 4) return 2.5;
+    return 0;
+  } else {
+    if (correct >= 39) return 9;
+    else if (correct >= 37) return 8.5;
+    else if (correct >= 35) return 8;
+    else if (correct >= 33) return 7.5;
+    else if (correct >= 30) return 7;
+    else if (correct >= 27) return 6.5;
+    else if (correct >= 23) return 6;
+    else if (correct >= 19) return 5.5;
+    else if (correct >= 15) return 5;
+    else if (correct >= 13) return 4.5;
+    else if (correct >= 10) return 4;
+    else if (correct >= 8) return 3.5;
+    else if (correct >= 6) return 3;
+    else if (correct >= 5) return 2.5;
+    return 0;
+  }
 }
 
 /**
@@ -421,6 +469,7 @@ export class Test {
    */
   static submit() {
     let avgScore = 0;
+    let totalReadingScore = 0;
     let count = 0;
     let generated = 0;
 
@@ -434,36 +483,61 @@ export class Test {
       generated++;
       e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
 
-      if (e.skill != "writing") return; //TODO: Implement writing
+      let userAnswer = "";
+      if (e.skill != "writing") {
+        const answers = e.answer.querySelectorAll('p');
+        // if (e.readingQuestionType == "true_false_not_given") {
+        //   answers.forEach(answer => {
+        //     if (answer.id == "question") return;
+            
+        //   });
+        // }
+        // return;
+        // TODO: THIS MESS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      } else {
+        userAnswer = e.answer.value;
+      }
       getAIResponse(`Generate a helpful review for the following answer:\n
-${e.answer.value}\n
+${userAnswer}\n
 The question is:\n
 ${e.question}\n\n
 Requirements:
-- Evaluate the quality, clarity, correctness, and completeness of the answer.
-- Provide a decent-length constructive review, proposing fixes to spelling and grammar, and better vocab & sentence structure for flow. You can give a "rewritten" version of the test taker's answer, but **don't grade that.**
-- At the end, output exactly one integer score from 0 to 100 in the format "Your score: XX".
+- Evaluate the quality, clarity, correctness, and completeness of the answer.${
+e.skill == "writing" ? 
+"- Provide a decent-length constructive review, proposing fixes to spelling and grammar, and better vocab & sentence structure for flow. You can give a \"rewritten\" version of the test taker's answer, but **don't grade that.**\n\
+- At the end, output exactly one integer score from 0 to 100 in the format \"Your score: XX\"." 
+: 
+"- Grade the test taker's answer. For each correct answer, give ONE point. At the end, output exactly one integer total questions in this section correct. Format: \"Questions correct: X\" (just the questions correct, no how many out of how many).\n\
+- For wrong answers, provide some short corrections and reasonings above."
+}
 - No other scoring formats or text after the score.
 - Be fair but not harsh. Rate using the same criterion as actual ${e.type.toUpperCase()} test graders.`).then(
         (r) => {
           e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
             r
           )}</div>`;
-
-          if (!enableAI) {
-            e.score = +prompt("test!").match(
-              /Your\s\s?score:\s*((?:\d|[.,]\d)+)/i
-            )[1];
+          
+          if (e.skill == "writing") {
+            if (!enableAI) {
+              e.score = +prompt("test!").match(
+                /Your\s\s?score:\s*((?:\d|[.,]\d)+)/i
+              )[1];
+            } else {
+              e.score = +r.match(/Your\s\s?score:\s*((?:\d|[.,]\d)+)/i)[1];
+            }
+            avgScore += e.score; // Writing score
+            count++;
           } else {
-            e.score = +r.match(/Your\s\s?score:\s*((?:\d|[.,]\d)+)/i)[1];
+            e.score = +r.match(/Questions\s\s?correct:\s\s?(\d+)/i)[1];
+            totalReadingScore += e.score;
           }
 
-          avgScore += e.score;
-          count++;
           generated--;
-
+          
+          // After all answers have been graded
           if (generated == 0) {
-            avgScore /= count;
+            avgScore += IELTSReadingToBand(totalReadingScore, e.ieltsType);
+            avgScore /= (count + 1);
             let scoreElement = document.createElement("h1");
             scoreElement.innerHTML = `Your score is <code>${avgScore.toFixed(
               1
