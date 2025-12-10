@@ -403,9 +403,9 @@ body {
   scrollbar-color: var(--accent-color) var(--background-color);
 }*/
 :root {
-  --accent-color-hover: #88cbff;
-  --accent-color: #0090ff;
-  --accent-color-button-pressed: #006dc1;
+  --accent-color-hover: #d2e3fc;
+  --accent-color: #4285f4;
+  --accent-color-button-pressed: #174ea6;
   --background-color: #fff;
   --foreground-color: #000;
   --box-border-color: #fff;
@@ -428,9 +428,9 @@ body.dark-mode {
   background-repeat: repeat;
   background-color: var(--real-background-color);
   color: var(--foreground-color);
-  --accent-color-hover: #88cbff;
-  --accent-color: #0090ff;
-  --accent-color-button-pressed: #006dc1;
+  --accent-color-hover: #d2e3fc;
+  --accent-color: #4285f4;
+  --accent-color-button-pressed: #174ea6;
   --background-color: #333;
   --foreground-color: #fff;
   --box-border-color: var(--background-color);

@@ -10,7 +10,16 @@ if (theme == "light") {
   Chart.defaults.backgroundColor = "#ffffff";
   Chart.defaults.borderColor = "#ffffff";
 }
-
+const kule = [
+  "#4285F4",
+  "#EA4335",
+  "#FBBC04",
+  "#34A853",
+  "#174EA6",
+  "#A50E0E",
+  "#E37400",
+  "#0D652D",
+];
 let enableAI = true;
 if (
   window.location.hostname === "localhost" ||
@@ -168,6 +177,8 @@ function generateChartFromMarkdownTable(e) {
         datasets: d.b.map((row, i) => ({
           label: d.sideways[i],
           data: row,
+          borderColor: kule[i % kule.length],
+          backgroundColor: kule[i % kule.length],
         })),
       },
     });

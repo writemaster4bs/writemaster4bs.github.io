@@ -9,8 +9,8 @@ let data = [
 ];
 (async function () {
   Chart.defaults.elements.line.tension = 0.25;
-  Chart.defaults.backgroundColor = "#0090ff";
-  Chart.defaults.borderColor = "#0090ff";
+  Chart.defaults.backgroundColor = "#4285f4";
+  Chart.defaults.borderColor = "#4285f4";
   the_chart = new Chart(document.getElementById("perfchart"), {
     type: "line",
     data: {
