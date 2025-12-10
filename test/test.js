@@ -45,7 +45,7 @@ export async function getAIResponse(prompt = "") {
 
   const data = await response.json();
   console.log(data);
-  return data.candidates[0].content.parts[0].text;
+  return data.choices[0].message.content.replaceAll(/`+/gi, "");
 }
 
 /**
