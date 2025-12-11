@@ -22,6 +22,7 @@ export async function getAIResponse(prompt = "") {
     await new Promise((resolve) =>
       setTimeout(resolve, 2000 + Math.random() * 1000)
     );
+    console.log(prompt);
     return `This is a response to the question "${prompt}"`;
     //return prompt;
   }
@@ -287,11 +288,13 @@ Requirements:
     
 Requirements:
 - Output **only** the question text and its required reading passage. Do **not** include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
-- The response **must** begin with the full reading passage, followed by a \`---\` horizontal line, followed by the question(s). Use a \`---\` **ONLY** between each ***different* question types. Questions of same type HAS to be with eachother.**
-- Produce **only** reading questions numbered from ${from} to ${to}. Do **not** generate any questions outside this range.
+- The response **must** begin with the full reading passage, followed by a \`---\` horizontal line, followed by the question(s). Use a \`---\` **ONLY** between each ***different* question types ***(REQUIRED)***. Questions of same type are to be with eachother and questions of different types are to be separated..**
+- Produce **only** reading questions numbered from ***${from} to ${to}.*** Do ***not*** generate any questions outside this range.
 - The question types and amount are: ${
-  Object.entries(type).map(([ques, amount]) => `${amount} ${questionTypes[ques]}`).join(' ')
-}. Remember to *NOT* say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements" (word it like in an actual test). Please, those brackets in the format are not to be put onto the tests. They're like javascript \${} interpolation.
+  Object.entries(type).map(([ques, amount]) => `${amount} questions of type '${questionTypes[ques]}'`).join(' ')
+}. These questions are inside the given range. Please do ***NOT*** generate extra questions.
+- You only need to generate the question themselves, I will handle all the user input answer things.
+- Remember to *NOT* say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements". Please, those brackets in the format are not to be put onto the tests. They're like javascript \${} interpolation.
 - The passage must be original, complete, and fully self-contained.
 - Do not summarize, shorten, merge, or omit any parts of the selected questions.
 - Ensure every selected question and every answer option (if any) appears in full.
@@ -300,12 +303,17 @@ Requirements:
 - Do not add anything before or after the passage + question text.
 - Output the **complete** passage and question text, and nothing else.
 - If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.
-- ***Note:*** Follow exactly, do not add stuff we did not ask. Treat this like you're generating for a regex algorithm to scan; if you use the wrong format, it doesn't work.`
+- FOLLOW THE ORDER GIVEN ABOVE, DO NOT MIX UP ORDER.
+- FOLLOW THE CORRECT FORMAT AND QUESTION TYPES GIVEN STOP GENERATING WRONG SENTENCE TYPES ***I KNOW WHAT I ASKED***
+- PLEASE DO NOT ADD STUFF WE DID NOT ASK, JUST THE QUESTION. DON'T ADD "True/False/Not Given" TO THE END OF TRUE FALSE NOT GIVEN QUESTIONS BECAUSE **WE DIDN'T ASK.**
+- ***Note: Follow exactly, do not add stuff we did not ask. Treat this like you're generating for a regex algorithm to scan; if you use the wrong format or generate outside of provided range, it doesn't work.***`
     ).then((response) => {
       const parts = response.replace("\n", "\n\n").split("---");
       parts[parts.length - 1] += "\n"; // IMPORTANT: Do not remove. This is not purely decorative.
       console.log(parts);
       let i = 1;
+      let questionText;
+
       Object.entries(type).forEach(([questionType, _]) => {
         sectionQuestion.innerHTML = marked.parse(parts[0] + "\n\n");
         
@@ -321,9 +329,9 @@ Requirements:
           questions.forEach(question => {
             const questionElement = document.createElement("p");
             questionElement.innerHTML = question[0].trim().concat(`\
-              <div class="tfng" style="margin-left: 2.5rem;"><input type="radio" name="${questionType}-${i}-${j}" id="t" /><span class="tfng_inner">T</span></div>\
-              <div class="tfng"><input type="radio" name="${questionType}-${i}-${j}" id="f" /><span class="tfng_inner">F</span></div>\
-              <div class="tfng"><input type="radio" name="${questionType}-${i}-${j}" id="ng" /><span class="tfng_inner">NG</span></div>`);
+              <div class="tfng" style="margin-left: 2.5rem;"><input type="radio" name="${questionType}-${i}-${j}" id="true" /><span class="tfng_inner">T</span></div>\
+              <div class="tfng"><input type="radio" name="${questionType}-${i}-${j}" id="false" /><span class="tfng_inner">F</span></div>\
+              <div class="tfng"><input type="radio" name="${questionType}-${i}-${j}" id="not given" /><span class="tfng_inner">NG</span></div>`);
             sectionAnswer.appendChild(questionElement);
             j++;
           });
@@ -349,19 +357,17 @@ Requirements:
           
           sectionAnswer.appendChild(document.createElement("br"));
         }
-
-        Test.Questions.questions.push({
-          question: response,
-          answer: sectionAnswer,
-          response: sectionResponse,
-          type: (test == "TOEIC") ? "toeic" : "ielts",
-          ieltsType: (test == "Academic IELTS") ? "ielts_acad" : "ielts_gen",
-          skill: "reading",
-          readingQuestionType: questionType
-        });
-
         i++;
       })
+      Test.Questions.questions.push({
+        question: response,
+        answer: sectionAnswer,
+        response: sectionResponse,
+        type: (test == "TOEIC") ? "toeic" : "ielts",
+        ieltsType: (test == "Academic IELTS") ? "ielts_acad" : "ielts_gen",
+        skill: "reading",
+        readingQuestionType: type
+      });
       this.checkGenerationFinished();
     });
     section.appendChild(sectionTitle);
@@ -485,14 +491,31 @@ export class Test {
 
       let userAnswer = "";
       if (e.skill != "writing") {
-        const answers = e.answer.querySelectorAll('p');
-        // if (e.readingQuestionType == "true_false_not_given") {
-        //   answers.forEach(answer => {
-        //     if (answer.id == "question") return;
-            
-        //   });
-        // }
-        // return;
+        const answers = e.answer.querySelectorAll("p");
+        const questionsTypes = e.readingQuestionType;
+        let currentQuestionType = 0;
+        let currentAnswer = 0;
+        console.log(questionsTypes);
+        
+        answers.forEach(answer => {
+          if (answer.id == "question") return;
+          const type = Object.keys(questionsTypes)[currentQuestionType];
+
+          userAnswer += answer.innerText.match(/\d+/)[0] + ". ";
+          if (type == "true_false_not_given") {
+            userAnswer += document.querySelector(`input[name="true_false_not_given-${currentQuestionType + 1}-${currentAnswer}"]:checked`).id;
+          } else if (type == "sentence_completion") {
+            userAnswer += answer.querySelector("div").innerText;
+          }
+          userAnswer += "\n";
+
+          currentAnswer++;
+          questionsTypes[type]--;
+          if (questionsTypes[type] <= 0) {
+            currentQuestionType++;
+            currentAnswer = 0;
+          }
+        });
         // TODO: THIS MESS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       } else {
         userAnswer = e.answer.value;
@@ -507,8 +530,11 @@ e.skill == "writing" ?
 "- Provide a decent-length constructive review, proposing fixes to spelling and grammar, and better vocab & sentence structure for flow. You can give a \"rewritten\" version of the test taker's answer, but **don't grade that.**\n\
 - At the end, output exactly one integer score from 0 to 100 in the format \"Your score: XX\"." 
 : 
-"- Grade the test taker's answer. For each correct answer, give ONE point. At the end, output exactly one integer total questions in this section correct. Format: \"Questions correct: X\" (just the questions correct, no how many out of how many).\n\
-- For wrong answers, provide some short corrections and reasonings above."
+"- Grade the test taker's answer. \
+- For empty answers, treat them as wrong. \
+- For wrong answers, provide some short corrections and reasoning AFTER GRADING. YOU HAVE TO BOTH GRADE AND PROVIDE CORRECTION.\n\
+- For each correct answer, give ONE point. At the end, output exactly one integer: questions in this section the user got correct. Format: \"Questions correct: X\" (just the questions correct, no how many out of how many).\n\
+- *Rememeber:* take in the full context. If the passage said 'Thursday and Friday', the blank was '_____ and Friday', then the user answering 'Thursday' is correct, because if you insert the answer into the blank, it makes sense."
 }
 - No other scoring formats or text after the score.
 - Be fair but not harsh. Rate using the same criterion as actual ${e.type.toUpperCase()} test graders.`).then(
@@ -516,6 +542,7 @@ e.skill == "writing" ?
           e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
             r
           )}</div>`;
+          console.log("done")
           
           if (e.skill == "writing") {
             if (!enableAI) {

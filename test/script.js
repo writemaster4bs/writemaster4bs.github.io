@@ -187,7 +187,7 @@ if (testType != "toeic") {
   }
   
   if (testIncludes.includes("test")) {
-    Test.Questions.generateIELTSReading("Reading Section 1 [Passage 1]", translationKeys[testType], 1, 5, {"true_false_not_given": 3, "sentence_completion": 2});
+    Test.Questions.generateIELTSReading("Reading Section 1 [Passage 1]", translationKeys[testType], 1, 6, {"true_false_not_given": 3, "sentence_completion": 2, "short_answer": 1});
     time += 60 * 60;
   }
 
