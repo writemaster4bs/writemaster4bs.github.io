@@ -138,7 +138,7 @@ if (testType != "toeic") {
     //   "all questions use the same text, and that the answerer should determine whether statements agree with the information. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
     // );
     Test.Questions.generateIELTSReading(
-      "Reading Tasks [Section 1]", 
+      "Reading Tasks [SECTION 1]", 
       translationKeys[testType],
       8,
       14,
@@ -187,7 +187,7 @@ if (testType != "toeic") {
   }
   
   if (testIncludes.includes("test")) {
-    Test.Questions.generateIELTSReading("Reading Section 1 [Passage 1]", translationKeys[testType], 1, 5, {"true_false_not_given": 3, "sentence_completion": 2});
+    Test.Questions.generateIELTSReading("Reading Section 1 [Passage 1]", translationKeys[testType], 1, 6, {"true_false_not_given": 3, "sentence_completion": 2, "short_answer": 1});
     time += 60 * 60;
   }
 
