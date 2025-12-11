@@ -9,8 +9,8 @@ let data = [
 ];
 (async function () {
   Chart.defaults.elements.line.tension = 0.25;
-  Chart.defaults.backgroundColor = "#4285f4";
-  Chart.defaults.borderColor = "#4285f4";
+  Chart.defaults.backgroundColor = "rgba(0,0,0,0.5)";
+  Chart.defaults.borderColor = "rgba(0,0,0,0.5)";
   the_chart = new Chart(document.getElementById("perfchart"), {
     type: "line",
     data: {
@@ -65,8 +65,8 @@ function Attach(what, next) {
 }
 
 Attach("main", "pref");
-Attach("pref", "stat");
-Attach("stat", "end");
+Attach("pref", "end");
+//Attach("stat", "end");
 let IELTS_Score = document.getElementById("ielts_score");
 let IELTS_Slider = document.getElementById("band_ielts");
 let TOEIC_Score = document.getElementById("toeic_score");
@@ -201,38 +201,68 @@ SetSliders.addEventListener("change", UpdateWTM);
 //let DarkModeSelector = document.getElementById("darkmode");
 
 //DarkModeSelector.checked = localStorage.getItem("darkmode") == "yes";
+["default", "light", "dark"].forEach((e) => {
+  document.getElementById(e).checked = localStorage.getItem("theme") == e;
+});
+["laso", "loje", "jelo", "kasi", "walo"].forEach((e) => {
+  document.getElementById(e).checked = localStorage.getItem("kule") == e;
+});
+var kule_pi_sitelen_linluwi = "laso"; //site color
+const kule_mute = {
+  laso: "#4285F4",
+  loje: "#EA4335",
+  jelo: "#FBBC04",
+  kasi: "#34A853",
+  walo: "#9AA0A6",
+};
+function UpdateKule() {
+  var kule = document.querySelector('input[name="kule"]:checked').id;
+  kule_pi_sitelen_linluwi = kule;
+  UpdateDarkMode();
+  localStorage.setItem("kule", kule);
+  the_chart.data.datasets[0].backgroundColor = [kule_mute[kule]];
+  the_chart.data.datasets[0].borderColor = [kule_mute[kule]];
 
-document.getElementById("default").checked =
-  localStorage.getItem("theme") == "default";
-document.getElementById("light").checked =
-  localStorage.getItem("theme") == "light";
-document.getElementById("dark").checked =
-  localStorage.getItem("theme") == "dark";
-
+  the_chart.update();
+}
 function UpdateDarkMode() {
   var selected = document.querySelector('input[name="theme"]:checked').id;
   selected = selected ?? "light";
+  var darkmode;
   if (selected == "dark") {
-    document.documentElement.className = "dark-mode";
+    darkmode = true;
   } else if (selected == "light") {
-    document.documentElement.className = "";
+    darkmode = false;
   } else {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.className = "dark-mode";
-    } else {
-      document.documentElement.className = "";
-    }
+    darkmode = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? true
+      : false;
   }
+  if (darkmode) {
+    document.documentElement.className = `dark-mode ${kule_pi_sitelen_linluwi}`;
+    the_chart.options.scales.x.ticks.color = ["#ffffff"];
+    the_chart.options.scales.y.ticks.color = ["#ffffff"];
+    the_chart.options.plugins.legend.labels.color = ["#ffffff"];
+  } else {
+    document.documentElement.className = `${kule_pi_sitelen_linluwi}`;
+    the_chart.options.scales.x.ticks.color = ["#000000"];
+    the_chart.options.scales.y.ticks.color = ["#000000"];
+    the_chart.options.plugins.legend.labels.color = ["#000000"];
+  }
+  the_chart.update();
   localStorage.setItem("theme", selected);
 }
 document.querySelectorAll('input[name="theme"]').forEach((e) => {
   e.addEventListener("change", UpdateDarkMode);
 });
+document.querySelectorAll('input[name="kule"]').forEach((e) => {
+  e.addEventListener("change", UpdateKule);
+});
 //DarkModeSelector.addEventListener("change", UpdateDarkMode);
-const c = "01234567890123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+/*const c = "01234567890123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 const randc = () => {
   return c[Math.floor(Math.random() * c.length)] ?? c[0];
-};
+};*/
 function ResetEverything() {
   localStorage.clear();
   //DarkModeSelector.checked = false;
@@ -240,6 +270,12 @@ function ResetEverything() {
   IELTS_Slider.value = 5.5;
   TOEIC_Slider.value = 700;
 
+  document.getElementById("laso").checked = true;
+  document.getElementById("kasi").checked = false;
+  document.getElementById("loje").checked = false;
+  document.getElementById("jelo").checked = false;
+  document.getElementById("walo").checked = false;
+  UpdateKule();
   UpdateWTM();
   UpdateSliders();
   document.getElementById("default").checked = false;
@@ -255,17 +291,9 @@ if (localStorage.getItem("used_before")) {
 }
 document.getElementById("deleteall").addEventListener("click", () => {
   if (confirm("Are you sure? This cannot be undone")) {
-    let code = "";
-    for (let j = 0; j < 5; j++) {
-      for (let i = 0; i < 5; i++) {
-        code += randc();
-      }
-      if (j == 4) {
-        continue;
-      }
-      code += "-";
-    }
-    if (prompt(`Please type the following code to confirm: ${code}`) == code) {
+    let m = Math.round(3 + Math.random() * 12);
+    let n = Math.round(3 + Math.random() * 12);
+    if (prompt(`What is ${m} + ${n}?`) == m + n) {
       ResetEverything();
     }
   }
@@ -298,3 +326,4 @@ document.getElementById("test_format").addEventListener("change", () => {
     document.getElementById("toeic_options").className = "hidden";
   }
 });
+UpdateKule();

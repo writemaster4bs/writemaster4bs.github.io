@@ -42,7 +42,7 @@ if (
   let type = "number";
   body = body.map((m) => {
     return m.map((n) => {
-      if (isNaN(+n.text)) {
+      if (li_nanpa(n.text)) {
         type = "string";
       }
       return n.text;
@@ -69,7 +69,7 @@ if (
   let type = "number";
   body = body.map((m) => {
     return m.map((n) => {
-      if (isNaN(+n.text)) {
+      if (li_nanpa(n.text)) {
         type = "string";
       }
       return n.text;
@@ -84,10 +84,44 @@ if (
   }
   return { h: header, b: body, c: WillChart };
 }*/
+/**@param {string} x */
+function li_nanpa(x) {
+  if (x == "NA") {
+    return true;
+  }
+  if (isNaN(+x)) {
+    if (x.at(-1) === "%") {
+      let t = x.substring(0, x.length - 1);
+      if (isNaN(+t)) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
+function tawa_nanpa(x) {
+  if (x == "NA") {
+    return 0;
+  }
+  if (isNaN(+x)) {
+    if (x.at(-1) === "%") {
+      let t = x.substring(0, x.length - 1);
+      if (isNaN(+t)) {
+        return t;
+      } else {
+        return +t;
+      }
+    } else {
+      return x;
+    }
+  }
+  return +x;
+}
 function parseTable(e) {
-  /*GPT-4: Do you trust me?
-  Me, Stonkalyasatone: With every cell of my body.
-   */
   let header = e.header.map((h) => h.text);
   let body = e.rows.map((r) => r.map((c) => c.text));
 
@@ -98,8 +132,8 @@ function parseTable(e) {
   for (let row of body) {
     if (row.length > 1) {
       // If first cell is NOT numeric but the rest ARE numeric → sideways header detected
-      const firstIsString = isNaN(+row[0]);
-      const restAreNumbers = row.slice(1).every((v) => !isNaN(+v));
+      const firstIsString = !li_nanpa(row[0]);
+      const restAreNumbers = row.slice(1).every((v) => li_nanpa(v));
 
       if (firstIsString && restAreNumbers) {
         sidewaysHeaders.push(row[0]);
@@ -119,13 +153,14 @@ function parseTable(e) {
   }
 
   let type = "number";
-  for (let row of body) for (let cell of row) if (isNaN(+cell)) type = "string";
+  for (let row of body)
+    for (let cell of row) if (!li_nanpa(cell)) type = "string";
 
   let WillChart = false;
 
   if (type === "number") {
-    body = body.map((row) => row.map((num) => +num));
-    WillChart = Math.random() >= 0.4;
+    body = body.map((row) => row.map((num) => tawa_nanpa(num)));
+    WillChart = Math.random() >= 0;
   }
   if (sidewaysHeaders.length == 0) {
     //dummy values
@@ -211,8 +246,8 @@ export async function getAIResponse(prompt = "") {
     return `This is a response to the question "${prompt}"\n Also, here's a table:
     |h0|ba|sau|bay|
     |---|---|---|---|
-    |a|3|1|4|
-    |b|1|5|4|`;
+    |a|30%|10%|40%|
+    |b|10%|50%|40%|`;
     //return prompt;
   }
   const response = await fetch(

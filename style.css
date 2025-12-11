@@ -269,6 +269,13 @@ header {
   height: fit-content;
   gap: 10px;
 }
+.option5 {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  margin: 10px;
+  height: fit-content;
+  gap: 10px;
+}
 .option2v {
   display: grid;
   grid-template-columns: auto auto;
@@ -413,7 +420,6 @@ body {
   --real-background-color: #fff;
   --color-interface-base: rgba(0, 0, 0, 0.2);
   --dm-bg-spacing: 2%;
-  scrollbar-color: var(--accent-color) var(--background-color);
 }
 
 /* === Dark Mode (activated when body has class .dark-mode) === */
@@ -428,9 +434,6 @@ body.dark-mode {
   background-repeat: repeat;
   background-color: var(--real-background-color);
   color: var(--foreground-color);
-  --accent-color-hover: #d2e3fc;
-  --accent-color: #4285f4;
-  --accent-color-button-pressed: #174ea6;
   --background-color: #333;
   --foreground-color: #fff;
   --box-border-color: var(--background-color);
@@ -438,6 +441,31 @@ body.dark-mode {
   --real-background-color: #000;
   --color-interface-base: rgba(255, 255, 255, 0.2);
   scrollbar-color: var(--accent-color) var(--background-color);
+}
+/*sitelen linluwi pi kule mute*/
+html.kasi body,
+body.kasi {
+  --accent-color-hover: #ceead6;
+  --accent-color: #34a853;
+  --accent-color-button-pressed: #0d652d;
+}
+html.jelo body,
+body.jelo {
+  --accent-color-hover: #feefc3;
+  --accent-color: #fbbc04;
+  --accent-color-button-pressed: #e37400;
+}
+html.loje body,
+body.loje {
+  --accent-color-hover: #fad2cf;
+  --accent-color: #ea4335;
+  --accent-color-button-pressed: #a50e0e;
+}
+html.walo body,
+body.walo {
+  --accent-color-hover: #f1f3f4;
+  --accent-color: #9aa0a6;
+  --accent-color-button-pressed: #202124;
 }
 .option {
   border-radius: 5px;
@@ -462,11 +490,13 @@ body.dark-mode {
 .user_interface {
   grid-area: user_interface;
   overflow-y: scroll;
+  scrollbar-color: var(--accent-color) var(--background-color);
 }
 
 .generate_test {
   grid-area: generate_test;
   overflow-y: scroll;
+  scrollbar-color: var(--accent-color) var(--background-color);
 }
 select {
   border: none;
